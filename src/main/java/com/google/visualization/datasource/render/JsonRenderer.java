@@ -113,7 +113,7 @@ public class JsonRenderer {
    * @param dsParams The datasource parameters.
    * @param responseStatus The response status.
    * @param data The data table.
-   * @param True if response should be rendered as jsonp, otherwise False.
+   * @param isJsonp if response should be rendered as jsonp, otherwise False.
    *
    * @return The json response for the given data table and parameters.
    */
@@ -273,13 +273,33 @@ public class JsonRenderer {
         cells = tableRow.getCells();
         sb.append("{\"c\":[");
         for (int cellId = 0; cellId < cells.size(); cellId++) {
+
+          boolean showAsHTML = false;
+
+          if (cellId < columnDescriptions.size())
+          {
+            columnDescription = columnDescriptions.get(cellId);
+
+            final String html = columnDescription.getCustomProperty("html");
+
+            if (html != null)
+            {
+              try
+              {
+                showAsHTML = Boolean.parseBoolean(html);
+              }
+              catch (Exception _e)
+              {
+              }
+            }
+          }
           cell = cells.get(cellId);
           if (cellId < (cells.size() - 1)) {
-            appendCellJson(cell, sb, includeFormatting, false, renderDateAsDateConstructor);
+            appendCellJson(cell, sb, includeFormatting, false, renderDateAsDateConstructor, showAsHTML);
             sb.append(",");
           } else {
             // Last column in the row.
-            appendCellJson(cell, sb, includeFormatting, true, renderDateAsDateConstructor);
+            appendCellJson(cell, sb, includeFormatting, true, renderDateAsDateConstructor, showAsHTML);
           }
         }
         sb.append("]");
@@ -323,7 +343,7 @@ public class JsonRenderer {
    */
   @Deprecated public static StringBuilder appendCellJson(TableCell cell,
       StringBuilder sb, boolean includeFormatting, boolean isLastColumn) {
-    return appendCellJson(cell, sb, includeFormatting, isLastColumn, true);
+    return appendCellJson(cell, sb, includeFormatting, isLastColumn, true, false);
   }
 
   /**
@@ -335,7 +355,7 @@ public class JsonRenderer {
    * @param isLastColumn Is this the last column in the row.
    * @param renderDateAsDateConstructor True -> date constructor, False -> date string.
    *     True if date values should be rendered into the json string as a call to
-   *     Date object constructor (usually used when rendering jsonp string). 
+   *     Date object constructor (usually used when rendering jsonp string).
    *     False if it should should be rendered as string.
    *     For example, when rendering the date 1/1/2011 as Date object constructor its value
    *     in the json string will be new Date(2011,1,1), and when rendered as string
@@ -345,7 +365,7 @@ public class JsonRenderer {
    */
   static StringBuilder appendCellJson(TableCell cell, 
       StringBuilder sb, boolean includeFormatting, boolean isLastColumn,
-      boolean renderDateAsDateConstructor) {
+      boolean renderDateAsDateConstructor, boolean showAsHTML) {
     Value value = cell.getValue();
     ValueType type = cell.getType();
     StringBuilder valueJson = new StringBuilder();
@@ -384,9 +404,16 @@ public class JsonRenderer {
           valueJson.append(((NumberValue) value).getValue());
           break;
         case TEXT:
-          valueJson.append("\"");
-          valueJson.append(EscapeUtil.jsonEscape(value.toString()));
-          valueJson.append("\"");
+          if (showAsHTML)
+          {
+            valueJson.append(value.toString());
+          }
+          else
+          {
+            valueJson.append("\"");
+            valueJson.append(EscapeUtil.jsonEscape(value.toString()));
+            valueJson.append("\"");
+          }
           break;
         case TIMEOFDAY:
           valueJson.append("[");

@@ -145,33 +145,33 @@ public class JsonRendererTest extends TestCase {
 
     assertEquals("{\"v\":new Date(2009,1,12)}",
         JsonRenderer.appendCellJson(dateCell, new StringBuilder(),
-            true, false, true).toString());
+            true, false, true, false).toString());
     assertEquals("{\"v\":\"Date(2009,1,12)\"}",
         JsonRenderer.appendCellJson(dateCell, new StringBuilder(),
-            true, false, false).toString());
+            true, false, false, false).toString());
     assertEquals("{\"v\":[12,13,14,15]}",
         JsonRenderer.appendCellJson(timeofdayCell, new StringBuilder(),
-            true, false, true).toString());
+            true, false, true, false).toString());
     assertEquals("{\"v\":new Date(2009,1,12,12,13,14)}", //no milliseconds passed
         JsonRenderer.appendCellJson(datetimeCell, new StringBuilder(),
-            true, false, true).toString());
+            true, false, true, false).toString());
     assertEquals("{\"v\":\"Date(2009,1,12,12,13,14)\"}", //no milliseconds passed
         JsonRenderer.appendCellJson(datetimeCell, new StringBuilder(),
-            true, false, false).toString());
+            true, false, false, false).toString());
     assertEquals("{\"v\":true}",
         JsonRenderer.appendCellJson(booleanCell, new StringBuilder(),
-            true, false, true).toString());
+            true, false, true, false).toString());
     assertEquals("{\"v\":12.3}",
         JsonRenderer.appendCellJson(numberCell, new StringBuilder(),
-            true, false, true).toString());
+            true, false, true, false).toString());
     assertEquals("{\"v\":\"aba\"}",
         JsonRenderer.appendCellJson(textCell, new StringBuilder(),
-            true, false, true).toString());
+            true, false, true, false).toString());
 
     // No formatting still stays the same when there is no formatted value
     assertEquals("{\"v\":12.3}",
         JsonRenderer.appendCellJson(numberCell, new StringBuilder(),
-            false, false, true).toString());
+            false, false, true, false).toString());
 
 
    dateCell = new TableCell(new DateValue(2009, 1, 12), "2009-2-12");
@@ -179,23 +179,23 @@ public class JsonRendererTest extends TestCase {
     // With formatting
     assertEquals("{\"v\":new Date(2009,1,12),\"f\":\"2009-2-12\"}",
         JsonRenderer.appendCellJson(dateCell, new StringBuilder(),
-            true, false, true).toString());
+            true, false, true, false).toString());
 
     // Without formatting
     assertEquals("{\"v\":new Date(2009,1,12)}",
         JsonRenderer.appendCellJson(dateCell, new StringBuilder(),
-            false, false, true).toString());
+            false, false, true, false).toString());
 
     TableCell nullCell = new TableCell(Value.getNullValueFromValueType(ValueType.NUMBER));
 
     // Null value
     assertEquals("",
         JsonRenderer.appendCellJson(nullCell, new StringBuilder(),
-            true, false, true).toString());
+            true, false, true, false).toString());
     // isLast = true
     assertEquals("{\"v\":null}",
         JsonRenderer.appendCellJson(nullCell, new StringBuilder(),
-            true, true, true).toString());
+            true, true, true, false).toString());
   }
 
   public void testAppendColumnDescriptionJson() {
