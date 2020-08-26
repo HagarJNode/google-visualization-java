@@ -303,7 +303,6 @@ public class JsonRendererTest extends TestCase {
                     + "\"rows\":["
                     + "{\"c\":["
                     +"{\"v\":\"\"},null,{\"v\":true}"
-//                    +"{null}"
                     +"]}"
                     +"]}",
             JsonRenderer.renderDataTable(testData, true, true, true).toString());
