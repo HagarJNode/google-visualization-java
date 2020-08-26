@@ -478,6 +478,12 @@ public class JsonRenderer {
       }
       sb.append("}");
     }
+    else
+    {
+      // As of version 46 json validation is more strict
+      // and empty values are no longer valid, so insert null.
+      sb.append("null");
+    }
     return sb;
   }
 

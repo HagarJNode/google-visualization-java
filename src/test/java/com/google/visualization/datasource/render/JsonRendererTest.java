@@ -189,7 +189,7 @@ public class JsonRendererTest extends TestCase {
     TableCell nullCell = new TableCell(Value.getNullValueFromValueType(ValueType.NUMBER));
 
     // Null value
-    assertEquals("",
+    assertEquals("null",
         JsonRenderer.appendCellJson(nullCell, new StringBuilder(),
             true, false, true, false).toString());
     // isLast = true
@@ -254,7 +254,7 @@ public class JsonRendererTest extends TestCase {
             + "{\"id\":\"B\",\"label\":\"col1\",\"type\":\"number\",\"pattern\":\"\"},"
             + "{\"id\":\"C\",\"label\":\"col2\",\"type\":\"boolean\",\"pattern\":\"\"}],"
             + "\"rows\":[{\"c\":[{\"v\":\"aaa\"},{\"v\":222.0,\"f\":\"222\"},{\"v\":false}]},"
-            + "{\"c\":[{\"v\":\"\"},,{\"v\":true}]},"
+            + "{\"c\":[{\"v\":\"\"},null,{\"v\":true}]},"
             + "{\"c\":[{\"v\":\"bbb\"},{\"v\":333.0},{\"v\":true}]},"
             + "{\"c\":[{\"v\":\"d\\u0027dd\"},{\"v\":222.0},{\"v\":false}]}]}",
         JsonRenderer.renderDataTable(testData, true, true, true).toString());
@@ -267,12 +267,50 @@ public class JsonRendererTest extends TestCase {
             + "\"00\\u0027\\u0022\\u003cscript\\u003e##\"},"
             + "{\"id\":\"C\",\"label\":\"col2\",\"type\":\"boolean\",\"pattern\":\"\"}],"
             + "\"rows\":[{\"c\":[{\"v\":\"aaa\"},{\"v\":222.0,\"f\":\"222\"},{\"v\":false}]},"
-            + "{\"c\":[{\"v\":\"\"},,{\"v\":true}]},"
+            + "{\"c\":[{\"v\":\"\"},null,{\"v\":true}]},"
             + "{\"c\":[{\"v\":\"bbb\"},{\"v\":333.0},{\"v\":true}]},"
             + "{\"c\":[{\"v\":\"d\\u0027dd\"},{\"v\":222.0},{\"v\":false}]}]}",
         JsonRenderer.renderDataTable(testData, true, true, true).toString());
   }
-  
+
+  public void testSimpleDataTableToJsonNull() throws DataSourceException {
+    testData = new DataTable();
+    ColumnDescription c0 = new ColumnDescription("A", ValueType.TEXT, "col0");
+    ColumnDescription c1 = new ColumnDescription("B", ValueType.NUMBER, "col1");
+    ColumnDescription c2 = new ColumnDescription("C", ValueType.BOOLEAN, "col2");
+
+    testData.addColumn(c0);
+    testData.addColumn(c1);
+    testData.addColumn(c2);
+
+    rows = Lists.newArrayList();
+
+    TableRow
+    row = new TableRow();
+    row.addCell(new TableCell(""));
+    row.addCell(new TableCell(NumberValue.getNullValue()));
+    row.addCell(new TableCell(true));
+    rows.add(row);
+
+    testData.addRows(rows);
+
+    assertEquals(
+            "{\"cols\":["
+                    + "{\"id\":\"A\",\"label\":\"col0\",\"type\":\"string\",\"pattern\":\"\"},"
+                    + "{\"id\":\"B\",\"label\":\"col1\",\"type\":\"number\",\"pattern\":\"\"},"
+                    + "{\"id\":\"C\",\"label\":\"col2\",\"type\":\"boolean\",\"pattern\":\"\"}"
+                    + "],"
+                    + "\"rows\":["
+                    + "{\"c\":["
+                    +"{\"v\":\"\"},null,{\"v\":true}"
+//                    +"{null}"
+                    +"]}"
+                    +"]}",
+            JsonRenderer.renderDataTable(testData, true, true, true).toString());
+  }
+
+
+
   public void testSimpleDataTableWithDatesInJson() throws DataSourceException {
     testData = new DataTable();
     ColumnDescription c0 = new ColumnDescription("DateA", ValueType.DATE, "col0");
