@@ -24,15 +24,7 @@ import com.google.visualization.datasource.base.Warning;
 import com.google.visualization.datasource.datatable.value.Value;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
-import com.ibm.icu.util.ULocale;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A table of data, arranged in typed columns.
@@ -83,7 +75,7 @@ public class DataTable {
   /**
    * The user locale, used to create localized messages.
    */
-  private ULocale localeForUserMessages = null;
+  private Locale localeForUserMessages = null;
 
   /**
    * Create a new empty result.
@@ -583,17 +575,17 @@ public class DataTable {
 
   /**
    * Sets the user locale for creating localized messages.
-   * @param userLocale the user locale.
+   * @param localeForUserMessages the user locale.
    */
-  public void setLocaleForUserMessages(ULocale localeForUserMessges) {
-    this.localeForUserMessages = localeForUserMessges;
+  public void setLocaleForUserMessages(final Locale localeForUserMessages) {
+    this.localeForUserMessages = localeForUserMessages;
   }
   
   /**
    * Returns the locale to use to create localized user messages.
    * @return The locale for user messages.
    */
-  public ULocale getLocaleForUserMessages() {
+  public Locale getLocaleForUserMessages() {
     return localeForUserMessages;
   }
 }

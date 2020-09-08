@@ -14,10 +14,9 @@
 
 package com.google.visualization.datasource.datatable.value;
 
-import com.ibm.icu.text.Collator;
-import com.ibm.icu.util.ULocale;
-
+import java.text.Collator;
 import java.util.Comparator;
+import java.util.Locale;
 
 /**
  * A value of type text (string).
@@ -117,16 +116,16 @@ public class TextValue extends Value {
   /**
    * Returns a comparator that compares text values according to a given locale.
    *
-   * @param ulocale The ulocale defining the order relation for text values.
+   * @param locale The ulocale defining the order relation for text values.
    *
    * @return A comparator that compares text values according to a given locale.
    */
-  public static Comparator<TextValue> getTextLocalizedComparator(final ULocale ulocale) {
+  public static Comparator<TextValue> getTextLocalizedComparator(final Locale locale) {
     return new Comparator<TextValue>() {
-      Collator collator = Collator.getInstance(ulocale);
+      final Collator collator = Collator.getInstance(locale);
 
       @Override
-      public int compare(TextValue tv1, TextValue tv2) {
+      public int compare(final TextValue tv1, final TextValue tv2) {
         if (tv1 == tv2) {
           return 0;
         }

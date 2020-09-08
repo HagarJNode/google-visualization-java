@@ -14,9 +14,8 @@
 
 package com.google.visualization.datasource.base;
 
-import com.ibm.icu.text.UFormat;
-
 import java.text.FieldPosition;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.ParsePosition;
 
@@ -40,7 +39,8 @@ import java.text.ParsePosition;
  * @author Hillel M.
  */
 
-public class BooleanFormat extends UFormat {
+public class BooleanFormat extends Format
+{
 
   /**
    * A string representing the boolean value true.

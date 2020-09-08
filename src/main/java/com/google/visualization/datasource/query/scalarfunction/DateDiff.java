@@ -20,12 +20,12 @@ import com.google.visualization.datasource.datatable.value.DateValue;
 import com.google.visualization.datasource.datatable.value.NumberValue;
 import com.google.visualization.datasource.datatable.value.Value;
 import com.google.visualization.datasource.datatable.value.ValueType;
-import com.ibm.icu.util.Calendar;
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * The binary scalar function datediff().
@@ -87,13 +87,10 @@ public class DateDiff implements ScalarFunction {
     if (firstValue.isNull() || secondValue.isNull()) {
       return NumberValue.getNullValue();
     }
-    Date firstDate = getDateFromValue(firstValue);
-    Date secondDate = getDateFromValue(secondValue);
+    final LocalDate dateFromValue1 = getDateFromValue(secondValue);
+    final LocalDate dateFromValue2 = getDateFromValue(firstValue);
 
-    GregorianCalendar calendar =
-        new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-    calendar.setTime(secondDate);
-    return new NumberValue(calendar.fieldDifference(firstDate, Calendar.DATE));
+    return new NumberValue(DAYS.between(dateFromValue1, dateFromValue2));
   }
 
   /**
@@ -103,14 +100,13 @@ public class DateDiff implements ScalarFunction {
    *
    * @return Date object with the same value as the given value.
    */
-  private Date getDateFromValue(Value value) {
-    Calendar calendar;
+  private LocalDate getDateFromValue(Value value) {
     if (value.getType() == ValueType.DATE) {
-      calendar = ((DateValue) value).getObjectToFormat();
+      return ((DateValue) value).getObjectToFormat();
     } else { // datetime
-      calendar = ((DateTimeValue) value).getObjectToFormat();
+      final LocalDateTime localDateTime = ((DateTimeValue) value).getObjectToFormat();
+      return localDateTime.toLocalDate();
     }
-    return calendar.getTime();
   }
 
   /**

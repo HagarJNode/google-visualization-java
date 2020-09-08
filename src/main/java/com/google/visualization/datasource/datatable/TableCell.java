@@ -20,10 +20,10 @@ import com.google.visualization.datasource.datatable.value.NumberValue;
 import com.google.visualization.datasource.datatable.value.TextValue;
 import com.google.visualization.datasource.datatable.value.Value;
 import com.google.visualization.datasource.datatable.value.ValueType;
-import com.ibm.icu.util.ULocale;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -57,16 +57,16 @@ public class TableCell {
    * Returns a comparator that compares table cells according to their inner
    * values and, in the case of text values, according to a given locale.
    *
-   * @param ulocale The ULocale defining the order relation of text values.
+   * @param locale The ULocale defining the order relation of text values.
    *
    * @return A comparator that compares table cells according to their inner
    *     values and, in the case of text values, according to a given locale.
    */
-  public static Comparator<TableCell> getLocalizedComparator(
-      final ULocale ulocale) {
+  public static Comparator<TableCell> getLocalizedComparator(final Locale locale)
+  {
     return new Comparator<TableCell>() {
       private Comparator<TextValue> textValueComparator =
-          TextValue.getTextLocalizedComparator(ulocale);
+          TextValue.getTextLocalizedComparator(locale);
 
       @Override
       public int compare(TableCell cell1, TableCell cell2) {

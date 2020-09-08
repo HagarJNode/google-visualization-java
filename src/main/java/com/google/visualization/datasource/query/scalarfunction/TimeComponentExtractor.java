@@ -22,8 +22,8 @@ import com.google.visualization.datasource.datatable.value.NumberValue;
 import com.google.visualization.datasource.datatable.value.TimeOfDayValue;
 import com.google.visualization.datasource.datatable.value.Value;
 import com.google.visualization.datasource.datatable.value.ValueType;
-import com.ibm.icu.util.GregorianCalendar;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -208,14 +208,14 @@ public class TimeComponentExtractor implements ScalarFunction {
         } else { // DATETIME
           component = ((DateTimeValue) value).getMonth();
         }
-        component = component / 3 + 1; // Add 1 to get 1-4 instead of 0-3. 
+        component = (component - 1) / 3 + 1; // Add 1 to get 1-4 instead of 0-3.
         break;
       case DAY_OF_WEEK:
-        GregorianCalendar calendar =
-            (GregorianCalendar) ((valueType == ValueType.DATE) ?
+        LocalDate localDate = valueType == ValueType.DATE ?
                 ((DateValue) value).getObjectToFormat() :
-                ((DateTimeValue) value).getObjectToFormat());
-        component = calendar.get(GregorianCalendar.DAY_OF_WEEK);
+                ((DateTimeValue) value).getObjectToFormat().toLocalDate();
+
+        component = localDate.getDayOfWeek().getValue();
         break;
       default:
         // should not get here since we assume that the given values are valid.

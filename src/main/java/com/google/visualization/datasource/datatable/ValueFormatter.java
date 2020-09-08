@@ -15,36 +15,25 @@
 package com.google.visualization.datasource.datatable;
 
 import com.google.common.collect.Maps;
-import com.google.visualization.datasource.base.BooleanFormat;
-import com.google.visualization.datasource.base.LocaleUtil;
-import com.google.visualization.datasource.base.TextFormat;
-import com.google.visualization.datasource.datatable.value.BooleanValue;
-import com.google.visualization.datasource.datatable.value.DateTimeValue;
-import com.google.visualization.datasource.datatable.value.DateValue;
-import com.google.visualization.datasource.datatable.value.NumberValue;
-import com.google.visualization.datasource.datatable.value.TextValue;
-import com.google.visualization.datasource.datatable.value.TimeOfDayValue;
-import com.google.visualization.datasource.datatable.value.Value;
-import com.google.visualization.datasource.datatable.value.ValueType;
+import com.google.visualization.datasource.base.*;
+import com.google.visualization.datasource.datatable.value.*;
 
-import com.ibm.icu.text.DecimalFormat;
-import com.ibm.icu.text.DecimalFormatSymbols;
-import com.ibm.icu.text.NumberFormat;
-import com.ibm.icu.text.SimpleDateFormat;
-import com.ibm.icu.text.UFormat;
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
-import com.ibm.icu.util.ULocale;
-
-import java.text.ParseException;
-import java.util.Date;
+import java.text.*;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 
 /**
  * Formats a {@link Value}, or parses a string to create a {@link Value}.
  * An instance of this class can be created using the
- * {@link #createFromPattern(ValueType, String, ULocale)} method, and can then use the format
+ * {@link #createFromPattern(ValueType, String, Locale)} method, and can then use the format
  * and/or parse.
  *
  * The class also supplies a set of default patterns per {@link ValueType}. The default patterns
@@ -61,22 +50,22 @@ public class ValueFormatter {
   /**
    * A uFormat that does the actual formatting.
    */
-  private UFormat uFormat;
+  private final Format format;
 
   /**
    * The underlying pattern for the {@code UFormat}.
    */
-  private String pattern;
+  private final String pattern;
 
   /**
-   * The locale used for the UFormatter.
+   * The locale used for the Formatter.
    */
-  private ULocale locale;
+  private final Locale locale;
 
   /**
    * The {@code ValueType}.
    */
-  private ValueType type;
+  private final ValueType type;
 
   /**
    * The default pattern for parsing a string to a text value.
@@ -90,21 +79,21 @@ public class ValueFormatter {
    *
    * @see DateTimeValue
    */
-  private static final String DEFAULT_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+  private static final String DEFAULT_DATETIME_PATTERN = "yyyy-M-d H:mm:ss";
 
   /**
    * The default pattern for parsing a string to a date value.
    *
    * @see DateValue
    */
-  private static final String DEFAULT_DATE_PATTERNS = "yyyy-MM-dd";
+  private static final String DEFAULT_DATE_PATTERNS = "yyyy-M-d";
 
   /**
    * The default pattern for parsing a string to a time of day value.
    *
    * @see TimeOfDayValue
    */
-  private static final String DEFAULT_TIMEOFDAY_PATTERN = "HH:mm:ss";
+  private static final String DEFAULT_TIMEOFDAY_PATTERN = "H:mm:ss";
 
   /**
    * The default pattern for parsing a string to a boolean value.
@@ -122,11 +111,14 @@ public class ValueFormatter {
 
   /**
    * Private constructor that constructs an instance of this class from a UFormat.
-   * Use {@link #createFromPattern(ValueType, String, ULocale)} to create an instance.
+   * Use {@link #createFromPattern(ValueType, String, Locale)} to create an instance.
    */
-  private ValueFormatter(String pattern, UFormat uFormat, ValueType type, ULocale locale) {
+  private ValueFormatter(final String pattern,
+                         final Format format,
+                         final ValueType type,
+                         final Locale locale) {
     this.pattern = pattern;
-    this.uFormat = uFormat;
+    this.format = format;
     this.type = type;
     this.locale = locale;
   }
@@ -139,12 +131,14 @@ public class ValueFormatter {
    *
    * @param type The column value type.
    * @param pattern The string pattern representing the formatter pattern.
-   * @param locale The ULocale of the formatter.
+   * @param locale The LLocale of the formatter.
    *
    * @return A formatter for the given type, pattern and locale, or null if the pattern is illegal.
    */
-  public static ValueFormatter createFromPattern(ValueType type, String pattern, ULocale locale) {
-    UFormat uFormat = null;
+  public static ValueFormatter createFromPattern(final ValueType type,
+                                                 String pattern,
+                                                 Locale locale) {
+    Format format;
     if (pattern == null) {
       pattern = getDefaultPatternByType(type);
     }
@@ -158,39 +152,38 @@ public class ValueFormatter {
     try {
       switch (type) {
         case BOOLEAN:
-          uFormat = new BooleanFormat(pattern);
-          uFormat.format(BooleanValue.TRUE.getObjectToFormat());
+          format = new BooleanFormat(pattern);
+          format.format(BooleanValue.TRUE.getObjectToFormat());
           break;
         case TEXT:
           // Dummy format so no need to check it for problems.
-          uFormat = new TextFormat();
+          format = new TextFormat();
           break;
         case DATE:
-          uFormat = new SimpleDateFormat(pattern, locale);
-          ((SimpleDateFormat) uFormat).setTimeZone(TimeZone.getTimeZone("GMT"));
-          uFormat.format(new DateValue(1995, 7, 3).getObjectToFormat());
+          format = new LocalDateFormat(pattern, locale);
+          format.format((new DateValue(1995, 7, 3)).getObjectToFormat());
           break;
         case TIMEOFDAY:
-          uFormat = new SimpleDateFormat(pattern, locale);
-          ((SimpleDateFormat) uFormat).setTimeZone(TimeZone.getTimeZone("GMT"));
-          uFormat.format(new TimeOfDayValue(2, 59, 12, 123).getObjectToFormat());
+          format = new LocalTimeFormat(pattern, locale);
+          format.format(new TimeOfDayValue(2, 59, 12, 123).getObjectToFormat());
           break;
         case DATETIME:
-          uFormat = new SimpleDateFormat(pattern, locale);
-          ((SimpleDateFormat) uFormat).setTimeZone(TimeZone.getTimeZone("GMT"));
-          uFormat.format(new DateTimeValue(1995, 7, 3, 2, 59, 12, 123).getObjectToFormat());
+          format = new LocalDateTimeFormat(pattern, locale);
+          format.format(new DateTimeValue(1995, 7, 3, 2, 59, 12, 123).getObjectToFormat());
           break;
         case NUMBER:
           DecimalFormatSymbols symbols = new DecimalFormatSymbols(locale);
-          uFormat = new DecimalFormat(pattern, symbols);
-          uFormat.format(new NumberValue(-12.3).getObjectToFormat());
+          format = new DecimalFormat(pattern, symbols);
+          format.format(new NumberValue(-12.3).getObjectToFormat());
           break;
+        default:
+          throw new IllegalStateException("Unexpected value: " + type);
       }
     } catch (RuntimeException e) {
       // The formatter is illegal return null.
       return null;
     }
-    return new ValueFormatter(pattern, uFormat, type, locale);
+    return new ValueFormatter(pattern, format, type, locale);
   }
 
   /**
@@ -202,7 +195,8 @@ public class ValueFormatter {
    *
    * @return A default formatter for the given type and locale.
    */
-  public static ValueFormatter createDefault(ValueType type, ULocale locale) {
+  public static ValueFormatter createDefault(final ValueType type,
+                                             final Locale locale) {
     String pattern = getDefaultPatternByType(type);
     return createFromPattern(type, pattern, locale);
   }
@@ -216,7 +210,7 @@ public class ValueFormatter {
    *
    * @return A map of default formatters by type with the given locale.
    */
-  public static Map<ValueType, ValueFormatter> createDefaultFormatters(ULocale locale) {
+  public static Map<ValueType, ValueFormatter> createDefaultFormatters(final Locale locale) {
     Map<ValueType, ValueFormatter> foramtters = Maps.newHashMap();
     for (ValueType type : ValueType.values()) {
       foramtters.put(type, createDefault(type, locale));
@@ -235,7 +229,7 @@ public class ValueFormatter {
     if (value.isNull()) {
       return "";
     }
-    return uFormat.format(value.getObjectToFormat());
+    return format.format(value.getObjectToFormat());
   }
 
 
@@ -275,7 +269,7 @@ public class ValueFormatter {
           value = new TextValue(val);
           break;
       }
-    } catch (ParseException pe) {
+    } catch (ParseException | DateTimeParseException pe) {
       value = Value.getNullValueFromValueType(type);
     }
     return value;
@@ -327,7 +321,7 @@ public class ValueFormatter {
    * @throws ParseException if val cannot be parsed into a boolean value.
    */
   private BooleanValue parseBoolean(String val) throws ParseException {
-    Boolean bool = ((BooleanFormat) uFormat).parse(val);
+    Boolean bool = ((BooleanFormat) format).parse(val);
     return BooleanValue.getInstance(bool);
   }
 
@@ -341,7 +335,7 @@ public class ValueFormatter {
    * @throws ParseException If val cannot be parsed into a number value.
    */
   private NumberValue parseNumber(String val) throws ParseException {
-    Number n = ((NumberFormat) uFormat).parse(val);
+    Number n = ((NumberFormat) format).parse(val);
     return new NumberValue(n.doubleValue());
   }
 
@@ -351,14 +345,9 @@ public class ValueFormatter {
    * @param val The string to parse.
    *
    * @return A date time value based on the given string.
-   *
-   * @throws ParseException If val cannot be parsed into a date.
    */
-  private DateTimeValue parseDateTime(String val) throws ParseException {
-    Date date = ((SimpleDateFormat) uFormat).parse(val);
-    GregorianCalendar gc = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-    gc.setTime(date);
-    return new DateTimeValue(gc);
+  private DateTimeValue parseDateTime(String val) throws ParseException{
+    return new DateTimeValue((LocalDateTime) format.parseObject(val));
   }
 
   /**
@@ -367,14 +356,9 @@ public class ValueFormatter {
    * @param val The string to parse.
    *
    * @return A date value based on the given string.
-   *
-   * @throws ParseException If val cannot be parsed into a date.
    */
   private DateValue parseDate(String val) throws ParseException {
-    Date date = ((SimpleDateFormat) uFormat).parse(val);
-    GregorianCalendar gc = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-    gc.setTime(date);
-    return new DateValue(gc);
+    return new DateValue((LocalDate) format.parseObject(val));
   }
 
   /**
@@ -383,14 +367,9 @@ public class ValueFormatter {
    * @param val The string to parse.
    *
    * @return A time of day value based on the given string.
-   *
-   * @throws ParseException If val cannot be parsed into a date.
    */
   private TimeOfDayValue parseTimeOfDay(String val) throws ParseException {
-    Date date = ((SimpleDateFormat) uFormat).parse(val);
-    GregorianCalendar gc = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-    gc.setTime(date);
-    return new TimeOfDayValue(gc);
+    return new TimeOfDayValue((LocalTime) format.parseObject(val));
   }
 
 
@@ -400,8 +379,8 @@ public class ValueFormatter {
    * 
    * @return The internal <code>UFormat</code> object.
    */
-  public UFormat getUFormat() {
-    return uFormat;
+  public Format getFormat() {
+    return format;
   }
 
   /**
@@ -418,7 +397,7 @@ public class ValueFormatter {
    * 
    * @return The ulocale.
    */
-  public ULocale getLocale() {
+  public Locale getLocale() {
     return locale;
   }
 

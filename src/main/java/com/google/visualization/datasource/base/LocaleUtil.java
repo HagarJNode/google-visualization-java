@@ -14,9 +14,7 @@
 
 package com.google.visualization.datasource.base;
 
-import com.ibm.icu.text.MessageFormat;
-import com.ibm.icu.util.ULocale;
-
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
@@ -44,7 +42,7 @@ public class LocaleUtil {
   /**
    * The default locale. Used as a fall-back locale throughout the system. 
    */
-  private static ULocale defaultLocale = ULocale.US;
+  private static Locale defaultLocale = Locale.US;
 
   /**
    * Converts a locale string from the RFC 3066 standard format to the Java locale format.
@@ -84,7 +82,7 @@ public class LocaleUtil {
    * 
    * @param defaultLocale The default locale.
    */
-  public static void setDefaultLocale(ULocale defaultLocale) {
+  public static void setDefaultLocale(final Locale defaultLocale) {
     LocaleUtil.defaultLocale = defaultLocale;
   }
 
@@ -93,7 +91,7 @@ public class LocaleUtil {
    * 
    * @return The default locale.
    */
-  public static ULocale getDefaultLocale() {
+  public static Locale getDefaultLocale() {
     return defaultLocale;
   }
 

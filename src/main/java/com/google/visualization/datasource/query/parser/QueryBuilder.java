@@ -18,11 +18,11 @@ import com.google.visualization.datasource.base.InvalidQueryException;
 import com.google.visualization.datasource.base.MessagesEnum;
 import com.google.visualization.datasource.query.Query;
 
-import com.ibm.icu.util.ULocale;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Locale;
 
 
 /**
@@ -82,7 +82,7 @@ public class QueryBuilder {
    *
    * @throws InvalidQueryException Thrown if the query is invalid.
    */
-  public Query parseQuery(String tqValue, ULocale ulocale) throws InvalidQueryException {
+  public Query parseQuery(final String tqValue, final Locale ulocale) throws InvalidQueryException {
     Query query;
     if (StringUtils.isEmpty(tqValue)) {
       query = new Query();

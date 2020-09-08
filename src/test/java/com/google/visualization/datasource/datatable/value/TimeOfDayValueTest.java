@@ -14,11 +14,9 @@
 
 package com.google.visualization.datasource.datatable.value;
 
-import com.ibm.icu.util.Calendar;
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
-
 import junit.framework.TestCase;
+
+import java.time.LocalTime;
 
 /**
  * Test for TimeOfDayValue.
@@ -157,35 +155,13 @@ public class TimeOfDayValueTest extends TestCase {
   }
 
   public void testCalendarConstructor() {
-    // All fields are set in the calendar although only hour, minute and seconds
-    // are requried.
-    GregorianCalendar calendar = new GregorianCalendar(2006, 1, 1, 21, 24, 25);
-    TimeOfDayValue value = null;
-    calendar.setTimeZone(TimeZone.getTimeZone("IST"));
-    // Check exception thrown for non GMT time zone.
-    try {
-      value = new TimeOfDayValue(calendar);
-      fail();
-    } catch (IllegalArgumentException iae) {
-      // do nothing
-    }
-    calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-    // Check exception not thrown for GMT time zone.
-    try {
-      value = new TimeOfDayValue(calendar);
-    } catch (IllegalArgumentException iae) {
-      fail();
-    }
+    TimeOfDayValue value = new TimeOfDayValue(LocalTime.of(21, 24, 25));
+
     // Verify values - default milliseconds.
     assertEquals(21, value.getHours());
     assertEquals(24, value.getMinutes());
     assertEquals(25, value.getSeconds());
     assertEquals(0, value.getMilliseconds());
-
-    // Non default milliseconds.
-    calendar.set(GregorianCalendar.MILLISECOND, 123);
-    value = new TimeOfDayValue(calendar);
-    assertEquals(123, value.getMilliseconds());
   }
 
   public void testGetType() {
@@ -367,10 +343,9 @@ public class TimeOfDayValueTest extends TestCase {
     TimeOfDayValue nullVal = TimeOfDayValue.getNullValue();
 
     assertNull(nullVal.getObjectToFormat());
-    GregorianCalendar cal = new GregorianCalendar(1899, 11, 30, 12, 23, 12);
-    cal.set(Calendar.MILLISECOND, 111);
-    cal.setTimeZone(TimeZone.getTimeZone("GMT"));
-    assertEquals(cal, val1.getObjectToFormat());
+    final LocalTime localTime = LocalTime.of(12, 23, 12, 111 * 1000000);
+
+    assertEquals(localTime, val1.getObjectToFormat());
   }
 
   public void testToQueryString() {

@@ -184,15 +184,15 @@ public class TimeComponentExtractorTest extends TestCase {
     assertEquals(new NumberValue(0), millisecond.evaluate(timeOfDayValues));
 
     List<Value> dateValues1 =
-        Lists.newArrayList((Value) new DateValue(2008, 1, 13));
+        Lists.newArrayList((Value) new DateValue(2008, 2, 13));
     List<Value> dateValues2 =
-        Lists.newArrayList((Value) new DateValue(2008, 4, 13));
-    List<Value> dateValues3 =
-        Lists.newArrayList((Value) new DateValue(2008, 8, 13));
-    List<Value> dateValues4 =
-        Lists.newArrayList((Value) new DateValue(2008, 11, 13));
-    List<Value> dateValues5 =
         Lists.newArrayList((Value) new DateValue(2008, 5, 13));
+    List<Value> dateValues3 =
+        Lists.newArrayList((Value) new DateValue(2008, 9, 13));
+    List<Value> dateValues4 =
+        Lists.newArrayList((Value) new DateValue(2008, 12, 13));
+    List<Value> dateValues5 =
+        Lists.newArrayList((Value) new DateValue(2008, 6, 13));
 
     assertEquals(new NumberValue(1), quarter.evaluate(dateValues1));
     assertEquals(new NumberValue(2), quarter.evaluate(dateValues2));
@@ -200,27 +200,27 @@ public class TimeComponentExtractorTest extends TestCase {
     assertEquals(new NumberValue(4), quarter.evaluate(dateValues4));
     assertEquals(new NumberValue(2), quarter.evaluate(dateValues5));
 
-    assertEquals(new NumberValue(4), dayofweek.evaluate(dateValues1));
-    assertEquals(new NumberValue(3), dayofweek.evaluate(dateValues2));
-    assertEquals(new NumberValue(7), dayofweek.evaluate(dateValues3));
-    assertEquals(new NumberValue(7), dayofweek.evaluate(dateValues4));
-    assertEquals(new NumberValue(6), dayofweek.evaluate(dateValues5));
+    assertEquals(new NumberValue(3), dayofweek.evaluate(dateValues1));
+    assertEquals(new NumberValue(2), dayofweek.evaluate(dateValues2));
+    assertEquals(new NumberValue(6), dayofweek.evaluate(dateValues3));
+    assertEquals(new NumberValue(6), dayofweek.evaluate(dateValues4));
+    assertEquals(new NumberValue(5), dayofweek.evaluate(dateValues5));
 
     List<Value> dateTimeValues1 =
         Lists.newArrayList((Value) new DateTimeValue(
-            2001, 0, 3, 9, 12, 22, 333));
+            2001, 1, 3, 9, 12, 22, 333));
     List<Value> dateTimeValues2 =
         Lists.newArrayList((Value) new DateTimeValue(
-            2001, 3, 3, 9, 12, 22, 333));
+            2001, 4, 3, 9, 12, 22, 333));
     List<Value> dateTimeValues3 =
         Lists.newArrayList((Value) new DateTimeValue(
-            2001, 8, 3, 9, 12, 22, 333));
+            2001, 9, 3, 9, 12, 22, 333));
     List<Value> dateTimeValues4 =
         Lists.newArrayList((Value) new DateTimeValue(
-            2001, 10, 3, 9, 12, 22, 333));
+            2001, 11, 3, 9, 12, 22, 333));
     List<Value> dateTimeValues5 =
         Lists.newArrayList((Value) new DateTimeValue(
-            2001, 7, 3, 9, 12, 22, 333));
+            2001, 8, 3, 9, 12, 22, 333));
 
     assertEquals(new NumberValue(1), quarter.evaluate(dateTimeValues1));
     assertEquals(new NumberValue(2), quarter.evaluate(dateTimeValues2));
@@ -228,11 +228,11 @@ public class TimeComponentExtractorTest extends TestCase {
     assertEquals(new NumberValue(4), quarter.evaluate(dateTimeValues4));
     assertEquals(new NumberValue(3), quarter.evaluate(dateTimeValues5));
 
-    assertEquals(new NumberValue(4), dayofweek.evaluate(dateTimeValues1));
-    assertEquals(new NumberValue(3), dayofweek.evaluate(dateTimeValues2));
-    assertEquals(new NumberValue(2), dayofweek.evaluate(dateTimeValues3));
-    assertEquals(new NumberValue(7), dayofweek.evaluate(dateTimeValues4));
-    assertEquals(new NumberValue(6), dayofweek.evaluate(dateTimeValues5));
+    assertEquals(new NumberValue(3), dayofweek.evaluate(dateTimeValues1));
+    assertEquals(new NumberValue(2), dayofweek.evaluate(dateTimeValues2));
+    assertEquals(new NumberValue(1), dayofweek.evaluate(dateTimeValues3));
+    assertEquals(new NumberValue(6), dayofweek.evaluate(dateTimeValues4));
+    assertEquals(new NumberValue(5), dayofweek.evaluate(dateTimeValues5));
   }
 
   // Tests that 2 instances of the same kind of TimeComponentExtractor are equal

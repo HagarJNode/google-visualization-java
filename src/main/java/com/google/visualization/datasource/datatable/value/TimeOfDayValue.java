@@ -14,10 +14,7 @@
 
 package com.google.visualization.datasource.datatable.value;
 
-
-import com.ibm.icu.util.Calendar;
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
+import java.time.LocalTime;
 
 
 /**
@@ -135,21 +132,17 @@ public class TimeOfDayValue extends Value {
    * correspond to the values returned by calendar.get(field) of the given
    * calendar.
    *
-   * @param calendar A GregorianCalendar from which to extract this instance
+   * @param localTime from which to extract this instance
    *     values: hour, minutes, seconds and milliseconds.
    *
    * @throws IllegalArgumentException When calendar time zone is not set
    *     to GMT.
    */
-  public TimeOfDayValue(GregorianCalendar calendar) {
-    if (!calendar.getTimeZone().equals(TimeZone.getTimeZone("GMT"))) {
-      throw new IllegalArgumentException(
-          "Can't create TimeOfDayValue from GregorianCalendar that is not GMT.");
-    }
-    this.hours = calendar.get(GregorianCalendar.HOUR_OF_DAY);
-    this.minutes = calendar.get(GregorianCalendar.MINUTE);
-    this.seconds = calendar.get(GregorianCalendar.SECOND);
-    this.milliseconds = calendar.get(GregorianCalendar.MILLISECOND);
+  public TimeOfDayValue(final LocalTime localTime) {
+    this.hours = localTime.getHour();
+    this.minutes = localTime.getMinute();
+    this.seconds = localTime.getSecond();
+    this.milliseconds = localTime.getNano() / 1000000;
   }
 
   @Override
@@ -253,24 +246,11 @@ public class TimeOfDayValue extends Value {
    * It is important to set the GMT TimeZone to avoid conversions related to TimeZone.
    */
   @Override
-  public Calendar getObjectToFormat() {
+  public LocalTime getObjectToFormat() {
     if (isNull()) {
       return null;
     }
-
-    // Set GMT TimeZone.
-    Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-    // Set to some predefined default. Don't change this default.
-    cal.set(Calendar.YEAR, 1899);
-    cal.set(Calendar.MONTH, Calendar.DECEMBER);
-    cal.set(Calendar.DAY_OF_MONTH, 30);
-    // Set the TimeOfDay based on this TimeOfDayValue.
-    cal.set(Calendar.HOUR_OF_DAY, hours);
-    cal.set(Calendar.MINUTE, minutes);
-    cal.set(Calendar.SECOND, seconds);
-    cal.set(Calendar.MILLISECOND, milliseconds);
-
-    return cal;
+    return LocalTime.of(hours, minutes, seconds, milliseconds * 1000000);
   }
 
   /**

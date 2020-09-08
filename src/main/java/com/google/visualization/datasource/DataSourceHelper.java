@@ -33,8 +33,6 @@ import com.google.visualization.datasource.render.CsvRenderer;
 import com.google.visualization.datasource.render.HtmlRenderer;
 import com.google.visualization.datasource.render.JsonRenderer;
 
-import com.ibm.icu.util.ULocale;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -364,7 +362,7 @@ public class DataSourceHelper {
 
   // -------------------------- Query helper methods ----------------------------------------------
 
-  /** @see #parseQuery(String, ULocale)*/
+  /** @see #parseQuery(String, Locale)*/
   public static Query parseQuery(String queryString) throws InvalidQueryException {
     return parseQuery(queryString, null);
   }
@@ -374,13 +372,14 @@ public class DataSourceHelper {
    * Throws an exception if the query is invalid.
    *
    * @param queryString The query string.
-   * @param locale The user locale.
+   * @param userLocale The user locale.
    *
    * @return The parsed query object.
    *
    * @throws InvalidQueryException If the query is invalid.
    */
-  public static Query parseQuery(String queryString, ULocale userLocale) 
+  public static Query parseQuery(final String queryString,
+                                 final Locale userLocale)
       throws InvalidQueryException {
     QueryBuilder queryBuilder = QueryBuilder.getInstance();
     Query query = queryBuilder.parseQuery(queryString, userLocale);
@@ -403,7 +402,9 @@ public class DataSourceHelper {
    * @throws InvalidQueryException If the query is invalid.
    * @throws DataSourceException If the data source cannot execute the query.
    */
-  public static DataTable applyQuery(Query query, DataTable dataTable, ULocale locale)
+  public static DataTable applyQuery(final Query query,
+                                     DataTable dataTable,
+                                     final Locale locale)
       throws InvalidQueryException, DataSourceException {
     dataTable.setLocaleForUserMessages(locale);
     validateQueryAgainstColumnStructure(query, dataTable);
@@ -492,7 +493,7 @@ public class DataSourceHelper {
    *
    * @return The locale for the given request.
    */
-  public static ULocale getLocaleFromRequest(HttpServletRequest req) {
+  public static Locale getLocaleFromRequest(HttpServletRequest req) {
     Locale locale;
     String requestLocale = req.getParameter(LOCALE_REQUEST_PARAMETER);
     if (requestLocale != null) {
@@ -502,6 +503,6 @@ public class DataSourceHelper {
       // Else, take the browser locale.
       locale = req.getLocale();
     }
-    return ULocale.forLocale(locale);
+    return locale;
   }
 }

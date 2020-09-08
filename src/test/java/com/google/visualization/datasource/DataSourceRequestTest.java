@@ -17,8 +17,6 @@ package com.google.visualization.datasource;
 import com.google.visualization.datasource.base.DataSourceException;
 import com.google.visualization.datasource.base.OutputType;
 
-import com.ibm.icu.util.ULocale;
-
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
@@ -54,7 +52,7 @@ public class DataSourceRequestTest extends TestCase {
       caught = true;
     }
     assertFalse(caught);
-    assertEquals(new ULocale("fr"), dataSourceRequest.getUserLocale());
+    assertEquals(new Locale("fr"), dataSourceRequest.getUserLocale());
     assertTrue(dataSourceRequest.isSameOrigin());
     assertEquals(OutputType.CSV, dataSourceRequest.getDataSourceParameters().getOutputType());
 
@@ -74,7 +72,7 @@ public class DataSourceRequestTest extends TestCase {
       caught = true;
     }
     assertFalse(caught);
-    assertEquals(new ULocale("it"), dataSourceRequest.getUserLocale());
+    assertEquals(new Locale("it"), dataSourceRequest.getUserLocale());
     assertFalse(dataSourceRequest.isSameOrigin());
     assertEquals(OutputType.JSONP, dataSourceRequest.getDataSourceParameters().getOutputType());
   }
@@ -93,7 +91,7 @@ public class DataSourceRequestTest extends TestCase {
     EasyMock.replay(req);
     dataSourceRequest = DataSourceRequest.getDefaultDataSourceRequest(req);
     EasyMock.verify(req);
-    assertEquals(new ULocale("fr"), dataSourceRequest.getUserLocale());
+    assertEquals(new Locale("fr"), dataSourceRequest.getUserLocale());
     assertTrue(dataSourceRequest.isSameOrigin());
     assertEquals(OutputType.CSV, dataSourceRequest.getDataSourceParameters().getOutputType());
 
@@ -108,7 +106,7 @@ public class DataSourceRequestTest extends TestCase {
     EasyMock.replay(req);
     dataSourceRequest = DataSourceRequest.getDefaultDataSourceRequest(req);
     EasyMock.verify(req);
-    assertEquals(new ULocale("qq"), dataSourceRequest.getUserLocale());
+    assertEquals(new Locale("qq"), dataSourceRequest.getUserLocale());
     assertFalse(dataSourceRequest.isSameOrigin());
     assertEquals(OutputType.JSONP, dataSourceRequest.getDataSourceParameters().getOutputType());
 
@@ -122,7 +120,7 @@ public class DataSourceRequestTest extends TestCase {
     EasyMock.replay(req);
     dataSourceRequest = DataSourceRequest.getDefaultDataSourceRequest(req);
     EasyMock.verify(req);
-    assertEquals(new ULocale("it"), dataSourceRequest.getUserLocale());
+    assertEquals(new Locale("it"), dataSourceRequest.getUserLocale());
     assertFalse(dataSourceRequest.isSameOrigin());
     assertEquals(OutputType.JSONP, dataSourceRequest.getDataSourceParameters().getOutputType());
   }

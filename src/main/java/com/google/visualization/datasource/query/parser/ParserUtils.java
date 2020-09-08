@@ -78,7 +78,6 @@ import org.apache.commons.logging.LogFactory;
     try {
       int year = Integer.parseInt(split[0]);
       int month = Integer.parseInt(split[1]);
-      month--; // normalize 1-12 to 0-11.
       int day = Integer.parseInt(split[2]);
       return new DateValue(year, month, day);
     } catch (NumberFormatException e) {
@@ -161,7 +160,6 @@ import org.apache.commons.logging.LogFactory;
     try {
       int year = Integer.parseInt(dateSplit[0]);
       int month = Integer.parseInt(dateSplit[1]);
-      month--; // normalize 1-12 to 0-11.
       int day = Integer.parseInt(dateSplit[2]);
       int hour = Integer.parseInt(timeSplit[0]);
       int minute = Integer.parseInt(timeSplit[1]);

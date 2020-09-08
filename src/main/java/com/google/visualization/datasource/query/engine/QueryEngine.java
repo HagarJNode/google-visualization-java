@@ -42,16 +42,7 @@ import com.google.visualization.datasource.query.QuerySort;
 import com.google.visualization.datasource.query.ScalarFunctionColumn;
 import com.google.visualization.datasource.query.SimpleColumn;
 
-import com.ibm.icu.util.ULocale;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -111,7 +102,7 @@ public final class QueryEngine {
    *
    * @return The data that is the result of executing the query.
    */
-  public static DataTable executeQuery(Query query, DataTable table, ULocale locale) {
+  public static DataTable executeQuery(Query query, DataTable table, Locale locale) {
     ColumnIndices columnIndices = new ColumnIndices();
     List<ColumnDescription> columnsDescription = table.getColumnDescriptions();
     for (int i = 0; i < columnsDescription.size(); i++) {
@@ -222,7 +213,9 @@ public final class QueryEngine {
    *
    * @return The sorted table.
    */
-  private static DataTable performSort(DataTable table, Query query, ULocale locale) {
+  private static DataTable performSort(final DataTable table,
+                                       final Query query,
+                                       final Locale locale) {
     if (!query.hasSort()) {
       return table;
     }
@@ -676,8 +669,10 @@ public final class QueryEngine {
    *
    * @return The table with formatting applied.
    */
-  private static DataTable performFormatting(DataTable table, Query query,
-      ColumnIndices columnIndices, ULocale locale) {
+  private static DataTable performFormatting(final DataTable table,
+                                             final Query query,
+                                             final ColumnIndices columnIndices,
+                                             final Locale locale) {
     if (!query.hasUserFormatOptions()) {
       return table;
     }

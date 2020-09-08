@@ -15,26 +15,12 @@
 package com.google.visualization.datasource.render;
 
 import com.google.common.collect.Lists;
-import com.google.visualization.datasource.base.DataSourceParameters;
-import com.google.visualization.datasource.base.OutputType;
-import com.google.visualization.datasource.base.ReasonType;
-import com.google.visualization.datasource.base.ResponseStatus;
-import com.google.visualization.datasource.base.StatusType;
-import com.google.visualization.datasource.base.Warning;
+import com.google.visualization.datasource.base.*;
 import com.google.visualization.datasource.datatable.ColumnDescription;
 import com.google.visualization.datasource.datatable.DataTable;
 import com.google.visualization.datasource.datatable.TableCell;
 import com.google.visualization.datasource.datatable.TableRow;
-import com.google.visualization.datasource.datatable.value.BooleanValue;
-import com.google.visualization.datasource.datatable.value.DateTimeValue;
-import com.google.visualization.datasource.datatable.value.DateValue;
-import com.google.visualization.datasource.datatable.value.NumberValue;
-import com.google.visualization.datasource.datatable.value.TimeOfDayValue;
-import com.google.visualization.datasource.datatable.value.Value;
-import com.google.visualization.datasource.datatable.value.ValueType;
-
-import com.ibm.icu.util.GregorianCalendar;
-
+import com.google.visualization.datasource.datatable.value.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrBuilder;
 
@@ -369,7 +355,6 @@ public class JsonRenderer {
     Value value = cell.getValue();
     ValueType type = cell.getType();
     StringBuilder valueJson = new StringBuilder();
-    GregorianCalendar calendar;
     String escapedFormattedString = "";
     boolean isJsonNull = false;
 
@@ -425,16 +410,16 @@ public class JsonRenderer {
           valueJson.append("]");
           break;
         case DATETIME:
-          calendar = ((DateTimeValue) value).getCalendar();
+          DateTimeValue dateTimeValue = ((DateTimeValue) value);
           valueJson.append("Date(");
-          valueJson.append(calendar.get(GregorianCalendar.YEAR)).append(",");
-          valueJson.append(calendar.get(GregorianCalendar.MONTH)).append(",");
-          valueJson.append(calendar.get(GregorianCalendar.DAY_OF_MONTH));
+          valueJson.append(dateTimeValue.getYear()).append(",");
+          valueJson.append(dateTimeValue.getMonth()).append(",");
+          valueJson.append(dateTimeValue.getDayOfMonth());
           valueJson.append(",");
-          valueJson.append(calendar.get(GregorianCalendar.HOUR_OF_DAY));
+          valueJson.append(dateTimeValue.getHourOfDay());
           valueJson.append(",");
-          valueJson.append(calendar.get(GregorianCalendar.MINUTE)).append(",");
-          valueJson.append(calendar.get(GregorianCalendar.SECOND));
+          valueJson.append(dateTimeValue.getMinute()).append(",");
+          valueJson.append(dateTimeValue.getSecond());
           valueJson.append(")");
           if (renderDateAsDateConstructor) {
             // Rendering date as a call to Date constructor, e.g new Date(2011,1,1,0,0,0)

@@ -22,11 +22,10 @@ import com.google.visualization.datasource.datatable.TableRow;
 import com.google.visualization.datasource.datatable.ValueFormatter;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
-import com.ibm.icu.util.ULocale;
-
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -52,7 +51,7 @@ public class CsvRenderer {
    *
    * @return The char sequence with the csv string.
    */
-  public static CharSequence renderDataTable(DataTable dataTable, ULocale locale,
+  public static CharSequence renderDataTable(DataTable dataTable, Locale locale,
       String separator) {
     if (separator == null) {
       separator = ",";

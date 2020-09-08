@@ -21,10 +21,10 @@ import com.google.visualization.datasource.query.ColumnLookup;
 import com.google.visualization.datasource.query.ColumnSort;
 import com.google.visualization.datasource.query.QuerySort;
 import com.google.visualization.datasource.query.SortOrder;
-import com.ibm.icu.util.ULocale;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A comparator comparing two {@link TableRow}s according to the query's ORDER BY, i.e.,
@@ -62,7 +62,7 @@ import java.util.List;
    * @param locale The locale defining the order relation of text values.
    * @param lookup The column lookup.
    */
-  public TableRowComparator(QuerySort sort, ULocale locale, ColumnLookup lookup) {
+  public TableRowComparator(QuerySort sort, Locale locale, ColumnLookup lookup) {
     valueComparator = Value.getLocalizedComparator(locale);
     columnLookup = lookup;
     List<ColumnSort> columns = sort.getSortColumns();

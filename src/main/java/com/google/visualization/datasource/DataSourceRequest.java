@@ -20,9 +20,8 @@ import com.google.visualization.datasource.base.InvalidQueryException;
 import com.google.visualization.datasource.base.OutputType;
 import com.google.visualization.datasource.query.Query;
 
-import com.ibm.icu.util.ULocale;
-
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 
 /**
  * This class contains all information concerning a data source request. The information in this
@@ -46,7 +45,7 @@ public class DataSourceRequest {
   /**
    * The user locale.
    */
-  private ULocale userLocale;
+  private Locale userLocale;
 
   /**
    * Indicates whether the request is from the same origin.
@@ -83,7 +82,9 @@ public class DataSourceRequest {
    * @param dsParams The data source parameters.
    * @param userLocale The user locale.
    */
-  public DataSourceRequest(Query query, DataSourceParameters dsParams, ULocale userLocale) {
+  public DataSourceRequest(final Query query,
+                           final DataSourceParameters dsParams,
+                           final Locale userLocale) {
     setUserLocale(userLocale);
     this.dsParams = dsParams;
     this.query = query;
@@ -217,7 +218,7 @@ public class DataSourceRequest {
    *
    * @param userLocale The user locale.
    */
-  public void setUserLocale(ULocale userLocale) {
+  public void setUserLocale(final Locale userLocale) {
     this.userLocale = userLocale;
   }
 
@@ -226,7 +227,7 @@ public class DataSourceRequest {
    *
    * @return The user locale.
    */
-  public ULocale getUserLocale() {
+  public Locale getUserLocale() {
     return userLocale;
   }
 

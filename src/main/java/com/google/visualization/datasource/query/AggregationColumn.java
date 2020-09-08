@@ -20,9 +20,8 @@ import com.google.visualization.datasource.base.MessagesEnum;
 import com.google.visualization.datasource.datatable.DataTable;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
-import com.ibm.icu.util.ULocale;
-
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A column that is referred to by an aggregation, for example, min(c1).
@@ -140,7 +139,7 @@ public class AggregationColumn extends AbstractColumn {
   @Override
   public void validateColumn(DataTable dataTable) throws InvalidQueryException {
     ValueType valueType = dataTable.getColumnDescription(aggregatedColumn.getId()).getType();
-    ULocale userLocale = dataTable.getLocaleForUserMessages();
+    Locale userLocale = dataTable.getLocaleForUserMessages();
     switch (aggregationType) {
       case COUNT: case MAX: case MIN: break;
       case AVG: case SUM:

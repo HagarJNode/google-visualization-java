@@ -27,14 +27,13 @@ import com.google.visualization.datasource.datatable.value.TimeOfDayValue;
 import com.google.visualization.datasource.datatable.value.Value;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
-import com.ibm.icu.util.ULocale;
-
 import junit.framework.TestCase;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Tests for DataTable.
@@ -50,7 +49,7 @@ public class DataTableTest extends TestCase {
   List<String> colIds;
 
   private static final Comparator<TableCell> CELL_COMPARATOR =
-      TableCell.getLocalizedComparator(ULocale.ENGLISH);
+      TableCell.getLocalizedComparator(Locale.ENGLISH);
 
   @Override
   public void setUp() throws Exception {
@@ -86,36 +85,36 @@ public class DataTableTest extends TestCase {
     row.addCell(new TableCell("aaa"));
     row.addCell(new TableCell(222));
     row.addCell(new TableCell(false));
-    row.addCell(new TableCell(new DateValue(2001, 10, 14)));
+    row.addCell(new TableCell(new DateValue(2001, 11, 14)));
     row.addCell(new TableCell(new TimeOfDayValue(12, 11, 13, 14)));
-    row.addCell(new TableCell(new DateTimeValue(2000, 10 , 1, 1, 10, 23, 432)));
+    row.addCell(new TableCell(new DateTimeValue(2000, 11 , 1, 1, 10, 23, 432)));
     rows.add(row);
 
     row = new TableRow();
     row.addCell(new TableCell(new TextValue("ccc"), "$ccc"));
     row.addCell(new TableCell(111));
     row.addCell(new TableCell(true));
-    row.addCell(new TableCell(new DateValue(2001, 1, 14)));
+    row.addCell(new TableCell(new DateValue(2001, 2, 14)));
     row.addCell(new TableCell(new TimeOfDayValue(12, 30, 13, 14)));
-    row.addCell(new TableCell(new DateTimeValue(1000, 11, 1, 1, 10, 23, 432)));
+    row.addCell(new TableCell(new DateTimeValue(1000, 12, 1, 1, 10, 23, 432)));
     rows.add(row);
 
     row = new TableRow();
     row.addCell(new TableCell("bbb"));
     row.addCell(new TableCell(3));
     row.addCell(new TableCell(true));
-    row.addCell(new TableCell(new DateValue(2012, 2, 14)));
+    row.addCell(new TableCell(new DateValue(2012, 3, 14)));
     row.addCell(new TableCell(new TimeOfDayValue(12, 11, 3, 14)));
-    row.addCell(new TableCell(new DateTimeValue(2000, 1 , 1, 1, 10, 31, 4)));
+    row.addCell(new TableCell(new DateTimeValue(2000, 2 , 1, 1, 10, 31, 4)));
     rows.add(row);
 
     row = new TableRow();
     row.addCell("ddd");
     row.addCell(222);
     row.addCell(false);
-    row.addCell(new DateValue(1997, 5, 5));
+    row.addCell(new DateValue(1997, 6, 5));
     row.addCell(new TimeOfDayValue(12, 15, 15, 14));
-    row.addCell(new DateTimeValue(3100, 1, 2, 15, 15, 1, 0));
+    row.addCell(new DateTimeValue(3100, 2, 2, 15, 15, 1, 0));
     rows.add(row);
 
     testData.addRows(rows);
@@ -161,12 +160,9 @@ public class DataTableTest extends TestCase {
    */
   public void testAddRowFromValues() {
     assertEquals(4, testData.getNumberOfRows());
-    GregorianCalendar c1 = new GregorianCalendar(2009, 2, 15);
-    c1.setTimeZone(TimeZone.getTimeZone("GMT"));
-    GregorianCalendar c2 = new GregorianCalendar(2009, 2, 15, 12, 30, 45);
-    c2.setTimeZone(TimeZone.getTimeZone("GMT"));
+    final LocalDateTime localDateTime = LocalDateTime.of(2009, 2, 15, 12, 30, 45);
     try {
-      testData.addRowFromValues("blah", 5, true, c1, c2, c2);
+      testData.addRowFromValues("blah", 5, true, localDateTime.toLocalDate(), localDateTime.toLocalTime(), localDateTime);
     } catch (TypeMismatchException e) {
       fail();
     }
@@ -174,9 +170,9 @@ public class DataTableTest extends TestCase {
     assertEquals(testData.getRow(4).getCell(0).getValue().compareTo(new TextValue("blah")), 0);
     assertEquals(testData.getRow(4).getCell(1).getValue().compareTo(new NumberValue(5)), 0);
     assertEquals(testData.getRow(4).getCell(2).getValue().compareTo(BooleanValue.TRUE), 0);
-    assertEquals(testData.getRow(4).getCell(3).getValue().compareTo(new DateValue(c1)), 0);
-    assertEquals(testData.getRow(4).getCell(4).getValue().compareTo(new TimeOfDayValue(c2)), 0);
-    assertEquals(testData.getRow(4).getCell(5).getValue().compareTo(new DateTimeValue(c2)), 0);
+    assertEquals(testData.getRow(4).getCell(3).getValue().compareTo(new DateValue(localDateTime.toLocalDate())), 0);
+    assertEquals(testData.getRow(4).getCell(4).getValue().compareTo(new TimeOfDayValue(localDateTime.toLocalTime())), 0);
+    assertEquals(testData.getRow(4).getCell(5).getValue().compareTo(new DateTimeValue(localDateTime)), 0);
   }
 
   /**
@@ -253,7 +249,7 @@ public class DataTableTest extends TestCase {
     ColumnDescription c0 = new ColumnDescription("A", ValueType.TEXT, "col0");
     ColumnDescription c1 = new ColumnDescription("B", ValueType.NUMBER, "col1");
     ColumnDescription c2 = new ColumnDescription("C", ValueType.BOOLEAN, "col2");
-    testData.setLocaleForUserMessages(ULocale.JAPAN);
+    testData.setLocaleForUserMessages(Locale.JAPAN);
     testData.addColumn(c0);
     testData.addColumn(c1);
     testData.addColumn(c2);

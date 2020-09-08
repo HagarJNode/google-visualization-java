@@ -14,9 +14,7 @@
 
 package com.google.visualization.datasource.datatable.value;
 
-import com.ibm.icu.util.Calendar;
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
+import java.time.LocalDate;
 
 
 /**
@@ -87,19 +85,18 @@ public class DateValue extends Value {
    * @throws IllegalArgumentException Thrown when one of the
    *     parameters is illegal.
    */
-  public DateValue(int year, int month, int dayOfMonth) {
-    // Constructs a GregorianCalendar with the given date set in
-    // the default time zone.
-    GregorianCalendar calendar =
-        new GregorianCalendar(year, month, dayOfMonth);
+  public DateValue(final int year,
+                   final int month,
+                   final int dayOfMonth)
+  {
+    final LocalDate localDate = LocalDate.of(year, month, dayOfMonth);
 
     // Input check. If the date is invalid the calendar object will output
     // different fields for year, month and/or dayOfMonth.
     // A RunTimeException is thrown here since it is very unusual for structured
     // data to be incorrect.
-    if ((calendar.get(GregorianCalendar.YEAR) != year)
-        || (calendar.get(GregorianCalendar.MONTH) != month)
-        || (calendar.get(GregorianCalendar.DAY_OF_MONTH) != dayOfMonth)) {
+    if (localDate.getYear() != year || localDate.getMonthValue() != month || localDate.getDayOfMonth() != dayOfMonth)
+    {
       throw new IllegalArgumentException("Invalid java date (yyyy-MM-dd): "
           + year + '-' + month + '-' + dayOfMonth);
     }
@@ -116,20 +113,17 @@ public class DateValue extends Value {
    * Note: The date values: year, month, dayOfMonth correspond to the values
    * returned by calendar.get(field) of the given calendar.
    *
-   * @param calendar A gregorian to extract this instance values: year, month
+   * @param localDate extract from this instance values: year, month
    *     and dayOfMonth.
    *
    * @throws IllegalArgumentException When calendar time zone is not set
    *     to GMT.
    */
-  public DateValue(GregorianCalendar calendar) {
-    if (!calendar.getTimeZone().equals(TimeZone.getTimeZone("GMT"))) {
-      throw new IllegalArgumentException(
-           "Can't create DateValue from GregorianCalendar that is not GMT.");
-    }
-    this.year = calendar.get(GregorianCalendar.YEAR);
-    this.month = calendar.get(GregorianCalendar.MONTH);
-    this.dayOfMonth = calendar.get(GregorianCalendar.DAY_OF_MONTH);
+  public DateValue(final LocalDate localDate) {
+
+    this.year = localDate.getYear();
+    this.month = localDate.getMonthValue();
+    this.dayOfMonth = localDate.getDayOfMonth();
   }
 
   @Override
@@ -147,7 +141,7 @@ public class DateValue extends Value {
     if (this == NULL_VALUE) {
       return "null";
     }
-    return String.format("%1$d-%2$02d-%3$02d", year, month + 1, dayOfMonth);
+    return String.format("%1$d-%2$02d-%3$02d", year, month, dayOfMonth);
 
   }
 
@@ -217,13 +211,12 @@ public class DateValue extends Value {
  }
 
   @Override
-  public Calendar getObjectToFormat() {
+  public LocalDate getObjectToFormat() {
     if (isNull()) {
       return null;
     }
-    GregorianCalendar cal = new GregorianCalendar(year, month, dayOfMonth);
-    cal.setTimeZone(TimeZone.getTimeZone("GMT"));
-    return cal;
+
+    return LocalDate.of(year, month, dayOfMonth);
   }
 
   /**
@@ -273,6 +266,6 @@ public class DateValue extends Value {
    */
   @Override
   protected String innerToQueryString() {
-    return "DATE '" + year + "-" + (month + 1) + "-" + dayOfMonth + "'";
+    return "DATE '" + year + "-" + (month) + "-" + dayOfMonth + "'";
   }
 }

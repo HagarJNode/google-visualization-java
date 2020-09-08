@@ -26,8 +26,6 @@ import com.google.visualization.datasource.datatable.ValueFormatter;
 import com.google.visualization.datasource.datatable.value.BooleanValue;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
-import com.ibm.icu.util.ULocale;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +35,7 @@ import org.w3c.dom.Element;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -91,7 +90,7 @@ public class HtmlRenderer {
    *
    * @return The char sequence with the html string.
    */
-  public static CharSequence renderDataTable(DataTable dataTable, ULocale locale) {
+  public static CharSequence renderDataTable(DataTable dataTable, Locale locale) {
     // Create an xml document with head and an empty body.
     Document document = createDocument();
     Element bodyElement = appendHeadAndBody(document);

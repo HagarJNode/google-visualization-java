@@ -66,7 +66,7 @@ public class ColumnValueFilterTest extends TestCase {
         new NumberValue(100.23), ComparisonFilter.Operator.GE);
     ColumnValueFilter filter2 = new ColumnValueFilter(
         new AggregationColumn(new SimpleColumn("c3"), AggregationType.MAX),
-        new DateValue(2007, 2, 3), ComparisonFilter.Operator.LIKE, true);
+        new DateValue(2007, 3, 3), ComparisonFilter.Operator.LIKE, true);
 
     assertEquals("`c2` >= 100.23", filter1.toQueryString());
     assertEquals("DATE '2007-3-3' LIKE MAX(`c3`)", filter2.toQueryString());

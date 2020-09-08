@@ -31,11 +31,10 @@ import com.google.visualization.datasource.datatable.value.TextValue;
 import com.google.visualization.datasource.datatable.value.TimeOfDayValue;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
-import com.ibm.icu.util.ULocale;
-
 import junit.framework.TestCase;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Tests for HtmlRenderer.
@@ -145,7 +144,7 @@ public class HtmlRendererTest extends TestCase {
         + "</body>" + nl
         + "</html>" + nl;
 
-    String actual = HtmlRenderer.renderDataTable(dataTable, ULocale.US).toString();
+    String actual = HtmlRenderer.renderDataTable(dataTable, Locale.US).toString();
     assertEquals(expected, actual);
   }
 
@@ -227,7 +226,7 @@ public class HtmlRendererTest extends TestCase {
         + "</body>" + nl
         + "</html>" + nl;
 
-    String actual = HtmlRenderer.renderDataTable(testData, ULocale.US).toString();
+    String actual = HtmlRenderer.renderDataTable(testData, Locale.US).toString();
 
     assertEquals(expected, actual);
   }
@@ -288,7 +287,7 @@ public class HtmlRendererTest extends TestCase {
       + "</body>" + nl
       + "</html>" + nl;
 
-    String actual = HtmlRenderer.renderDataTable(testData, ULocale.US).toString();
+    String actual = HtmlRenderer.renderDataTable(testData, Locale.US).toString();
 
     assertEquals(expected, actual);
   }

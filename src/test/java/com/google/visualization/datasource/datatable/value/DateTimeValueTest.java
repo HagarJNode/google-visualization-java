@@ -14,10 +14,10 @@
 
 package com.google.visualization.datasource.datatable.value;
 
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
-
 import junit.framework.TestCase;
+
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
 
 /**
  * Test for DateTimeValue.
@@ -39,13 +39,13 @@ public class DateTimeValueTest extends TestCase {
     try {
       new DateTimeValue(2007, 13, 11, 23, 34, 56, 609);      
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
     try {
       new DateTimeValue(2007, -1, 11, 23, 34, 56, 609);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
   }
@@ -55,13 +55,13 @@ public class DateTimeValueTest extends TestCase {
     try {
       new DateTimeValue(2007, 10, 32, 23, 34, 56, 609);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
     try {
       new DateTimeValue(2007, 10, 0, 23, 34, 56, 609);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
   }
@@ -71,13 +71,13 @@ public class DateTimeValueTest extends TestCase {
     try {
       new DateTimeValue(2007, 8, 20, 24, 34, 56, 609);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
     try {
       new DateTimeValue(2007, 8, 20, -1, 34, 56, 609);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
   }
@@ -87,13 +87,13 @@ public class DateTimeValueTest extends TestCase {
     try {
       new DateTimeValue(2007, 7, 11, 14, 62, 56, 609);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
     try {
       new DateTimeValue(2007, 7, 11, 14, -1, 56, 609);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
   }
@@ -103,13 +103,13 @@ public class DateTimeValueTest extends TestCase {
     try {
       new DateTimeValue(2007, 8, 11, 23, 34, 63, 609);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
     try {
       new DateTimeValue(2007, 8, 11, 23, 34, -10, 609);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
   }
@@ -119,13 +119,13 @@ public class DateTimeValueTest extends TestCase {
     try {
       new DateTimeValue(2007, 7, 11, 23, 34, 56, 1000);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
     try {
       new DateTimeValue(2007, 7, 11, 23, 34, 56, -1);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
   }
@@ -134,36 +134,23 @@ public class DateTimeValueTest extends TestCase {
   public void testConstructorSpecialValuesOfDate() {
     try {
       // February doesn't have 30 days.
-      new DateTimeValue(1990, 1, 30, 23, 11, 11, 100);
+      new DateTimeValue(1990, 2, 30, 23, 11, 11, 100);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
     try {
       // February doesn't have 29 days in 2007.
-      new DateTimeValue(2007, 1, 29, 23, 10, 10, 200);
+      new DateTimeValue(2007, 2, 29, 23, 10, 10, 200);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
     try {
       // September doesn't have 31 days.
-      new DateTimeValue(2007, 8, 31, 11, 5, 5, 5);
+      new DateTimeValue(2007, 9, 31, 11, 5, 5, 5);
       fail();
-    } catch (IllegalArgumentException e) {
-      // Expected behavior.
-    }
-  }
-
-  /**
-   * Months in DateValue are represented by the numbers {0, .., 11} as in Java.
-   */
-  public void testJavaMonthConvention() {
-    // Check the Exception is thrown.
-    try {
-      new DateTimeValue(1990, 12, 10, 1, 1, 1, 1);
-      fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
   }
@@ -172,7 +159,7 @@ public class DateTimeValueTest extends TestCase {
     // Test if the construction does not fail.
     try {
       // 1st of February 2300.
-      DateTimeValue value = new DateTimeValue(2300, 1, 1, 15, 15, 15, 150);
+      DateTimeValue value = new DateTimeValue(2300, 2, 1, 15, 15, 15, 150);
       assertNotNull(value);
       assertFalse(value.isNull());
     } catch (IllegalArgumentException e) {
@@ -181,7 +168,7 @@ public class DateTimeValueTest extends TestCase {
     }
     try {
       // 1st of January 130.
-      DateTimeValue value = new DateTimeValue(130, 0, 1, 0, 0, 0, 0);
+      DateTimeValue value = new DateTimeValue(130, 1, 1, 0, 0, 0, 0);
       assertNotNull(value);
       assertFalse(value.isNull());
     } catch (IllegalArgumentException e) {
@@ -191,7 +178,7 @@ public class DateTimeValueTest extends TestCase {
     }
     // This is the 29th of February of 2009 which is a real date.
     try {
-      DateTimeValue value = new DateTimeValue(2008, 1, 29, 15, 12, 10, 600);
+      DateTimeValue value = new DateTimeValue(2008, 2, 29, 15, 12, 10, 600);
       assertNotNull(value);
       assertFalse(value.isNull());
     } catch (IllegalArgumentException e) {
@@ -201,26 +188,12 @@ public class DateTimeValueTest extends TestCase {
   }
 
   public void testCalendarConstructor() {
-    GregorianCalendar calendar = new GregorianCalendar(2006, 1, 1, 21, 24, 25);
-    calendar.set(GregorianCalendar.MILLISECONDS_IN_DAY, 222);
-    DateTimeValue value = null;
-    calendar.setTimeZone(TimeZone.getTimeZone("IST"));
-    // Check exception thrown for non GMT time zone.
-    try {
-      value = new DateTimeValue(calendar);
-      fail();
-    } catch (IllegalArgumentException iae) {
-      // do nothing
-    }
-    calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-    // Check exception not thrown for GMT time zone.
-    try {
-      value = new DateTimeValue(calendar);
-    } catch (IllegalArgumentException iae) {
-      fail();
-    }
+    final LocalDateTime localDateTime = LocalDateTime.of(2006, 1, 1, 21, 24, 25);
+
+    final DateTimeValue value = new DateTimeValue(localDateTime);
+
     // Verify values - default milliseconds.
-    assertEquals(calendar, value.getCalendar());
+    assertEquals(localDateTime, value.getLocalDateTime());
   }
 
   public void testGetType() {
@@ -234,10 +207,10 @@ public class DateTimeValueTest extends TestCase {
   public void testToString() {
     DateTimeValue value = DateTimeValue.getNullValue();
     assertEquals(value.toString(), "null");
-    value = new DateTimeValue(2007, 7, 11, 23, 34, 56, 100);
+    value = new DateTimeValue(2007, 8, 11, 23, 34, 56, 100);
     assertEquals("2007-08-11 23:34:56.100", value.toString());
 
-    value = new DateTimeValue(1500, 3, 3, 12, 12, 12, 12);
+    value = new DateTimeValue(1500, 4, 3, 12, 12, 12, 12);
     assertEquals("1500-04-03 12:12:12.012", value.toString());
   }
 
@@ -296,9 +269,9 @@ public class DateTimeValueTest extends TestCase {
   public void testGetCalendar() {
     DateTimeValue val1 = new DateTimeValue(1499, 3, 3, 10, 12, 12, 12);
     DateTimeValue val2 = DateTimeValue.getNullValue();
-    assertNotNull(val1.getCalendar());
+    assertNotNull(val1.getLocalDateTime());
     try {
-      val2.getCalendar();
+      val2.getLocalDateTime();
       assertFalse(true);
     } catch (NullValueException e) {
       // Expected behavior.
@@ -327,17 +300,15 @@ public class DateTimeValueTest extends TestCase {
     DateTimeValue val = new DateTimeValue(2020, 3, 12, 2, 31, 12, 111);
     DateTimeValue valNull = DateTimeValue.getNullValue();
 
-    GregorianCalendar g = new GregorianCalendar(2020, 3, 12, 2, 31, 12);
-    g.set(GregorianCalendar.MILLISECOND, 111);
-    g.setTimeZone(TimeZone.getTimeZone("GMT"));
+    final LocalDateTime localDateTime = LocalDateTime.of(2020, 3, 12, 2, 31, 12, 111 * 1000000);
 
     assertNull(valNull.getObjectToFormat());
-    assertEquals(g, val.getObjectToFormat());
+    assertEquals(localDateTime, val.getObjectToFormat());
   }
 
   public void testToQueryString() {
-    DateTimeValue val1 = new DateTimeValue(2020, 3, 12, 2, 31, 12, 123);
-    DateTimeValue val2 = new DateTimeValue(2007, 5, 6, 7, 8, 9, 0);
+    DateTimeValue val1 = new DateTimeValue(2020, 4, 12, 2, 31, 12, 123);
+    DateTimeValue val2 = new DateTimeValue(2007, 6, 6, 7, 8, 9, 0);
 
     assertEquals("DATETIME '2020-4-12 2:31:12.123'", val1.toQueryString());
     assertEquals("DATETIME '2007-6-6 7:8:9'", val2.toQueryString());

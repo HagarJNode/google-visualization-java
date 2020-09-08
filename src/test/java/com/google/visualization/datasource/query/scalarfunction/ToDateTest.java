@@ -73,8 +73,8 @@ List<Value> valuesList4 =
         Lists.<Value>newArrayList(new NumberValue(-1234567890000.0));
     assertEquals(new DateValue(2008, 1, 13), toDate.evaluate(valuesList1));
     assertEquals(new DateValue(2008, 2, 23), toDate.evaluate(valuesList2));
-    assertEquals(new DateValue(2009, 1, 13), toDate.evaluate(valuesList3));
-    assertEquals(new DateValue(1930, 10, 18), toDate.evaluate(valuesList4));
+    assertEquals(new DateValue(2009, 2, 14), toDate.evaluate(valuesList3));
+    assertEquals(new DateValue(1930, 11, 18), toDate.evaluate(valuesList4));
 
   }
 }

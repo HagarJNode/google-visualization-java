@@ -42,8 +42,6 @@ import com.google.visualization.datasource.query.QuerySort;
 import com.google.visualization.datasource.query.SimpleColumn;
 import com.google.visualization.datasource.query.SortOrder;
 
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
 import junit.framework.TestCase;
 
 import org.apache.commons.lang.text.StrBuilder;
@@ -54,6 +52,8 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 /**
@@ -307,19 +307,20 @@ public class SqlDataSourceHelperTest extends TestCase {
   public void testBuildDataTableRows() throws SQLException {
     // Build Timestamp, Date ant Time objects for the date February 8, 2008
     // 09:01:10. Set their values in the table.
-    GregorianCalendar gc = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-    gc.set(2008, 1, 8, 9, 1, 10);
-    // Set the milliseconds explicitly, otherwise the milliseconds from the
-    // time the gc was initialized are used.
-    gc.set(GregorianCalendar.MILLISECOND, 0);
 
-    Date date = new Date(gc.getTimeInMillis());
-    Time time = new Time(gc.get(GregorianCalendar.HOUR), gc.get(GregorianCalendar.MINUTE),
-        gc.get(GregorianCalendar.SECOND));
+    final LocalDateTime localDateTime = LocalDateTime.of(2008, 2, 8, 9, 1, 10, 0);
+
+    Date date = new Date(localDateTime.getYear() - 1900, localDateTime.getMonthValue() - 1, localDateTime.getDayOfMonth());
+    Time time = new Time(localDateTime.getHour(), localDateTime.getMinute(), localDateTime.getSecond());
+
     Timestamp timestamp = new Timestamp(
-        gc.get(GregorianCalendar.YEAR) - 1900, gc.get(GregorianCalendar.MONTH),
-        gc.get(GregorianCalendar.DAY_OF_MONTH), gc.get(GregorianCalendar.HOUR),
-        gc.get(GregorianCalendar.MINUTE), gc.get(GregorianCalendar.SECOND), 0);
+            localDateTime.getYear() - 1900,
+            localDateTime.getMonthValue() - 1,
+            localDateTime.getDayOfMonth(),
+            localDateTime.getHour(),
+            localDateTime.getMinute(),
+            localDateTime.getSecond(),
+            localDateTime.getNano());
 
     // Create the table rows.
     List<Object> row1 =
@@ -418,10 +419,10 @@ public class SqlDataSourceHelperTest extends TestCase {
         dataTable.getRow(2).getCell(4).getValue());
     assertEquals("true", dataTable.getRow(2).getCell(5).getValue().toString());
     assertEquals(dataTable.getRow(0).getCell(6).getValue().toString(),
-        new DateValue(gc), dataTable.getRow(0).getCell(6).getValue());
-    assertEquals(new DateTimeValue(gc),
+        new DateValue(localDateTime.toLocalDate()), dataTable.getRow(0).getCell(6).getValue());
+    assertEquals(new DateTimeValue(localDateTime),
         dataTable.getRow(0).getCell(7).getValue());
-    assertEquals(new TimeOfDayValue(gc),
+    assertEquals(new TimeOfDayValue(localDateTime.toLocalTime()),
         dataTable.getRow(0).getCell(8).getValue());
     assertEquals(DateValue.getNullValue(),
         dataTable.getRow(1).getCell(6).getValue());

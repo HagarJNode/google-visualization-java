@@ -48,10 +48,6 @@ import com.google.visualization.datasource.query.QuerySort;
 import com.google.visualization.datasource.query.SimpleColumn;
 import com.google.visualization.datasource.query.SortOrder;
 
-import com.ibm.icu.util.Calendar;
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrBuilder;
 import org.apache.commons.logging.Log;
@@ -67,6 +63,9 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -700,55 +699,33 @@ public class SqlDataSourceHelper {
         Date date = rs.getDate(column);
         // If date is null it is handled later.
         if (date != null) {
-          GregorianCalendar gc =
-              new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-          // Set the year, month and date in the gregorian calendar.
-          // Use the 'set' method with those parameters, and not the 'setTime'
-          // method with the date parameter, since the Date object contains the
-          // current time zone and it's impossible to change it to 'GMT'.
-          gc.set(date.getYear() + 1900, date.getMonth(), date.getDate());
-          value = new DateValue(gc);
+          value = new DateValue(
+                  LocalDate.of(
+                          date.getYear() + 1900,
+                          date.getMonth() + 1,
+                          date.getDate()));
         }
         break;
       case DATETIME:
         Timestamp timestamp = rs.getTimestamp(column);
         // If timestamp is null it is handled later.
         if (timestamp != null) {
-          GregorianCalendar gc =
-              new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-          // Set the year, month, date, hours, minutes and seconds in the
-          // gregorian calendar. Use the 'set' method with those parameters,
-          // and not the 'setTime' method with the timestamp parameter, since
-          // the Timestamp object contains the current time zone and it's
-          // impossible to change it to 'GMT'.
-          gc.set(timestamp.getYear() + 1900, timestamp.getMonth(),
-                 timestamp.getDate(), timestamp.getHours(), timestamp.getMinutes(),
-                 timestamp.getSeconds());
-          // Set the milliseconds explicitly, as they are not saved in the
-          // underlying date.
-          gc.set(Calendar.MILLISECOND, timestamp.getNanos() / 1000000);
-          value = new DateTimeValue(gc);
+          value = new DateTimeValue(
+                  LocalDateTime.of(
+                          timestamp.getYear() + 1900,
+                          timestamp.getMonth() + 1,
+                          timestamp.getDate(),
+                          timestamp.getHours(),
+                          timestamp.getMinutes(),
+                          timestamp.getSeconds(),
+                          timestamp.getNanos()));
         }
         break;
       case TIMEOFDAY:
         Time time = rs.getTime(column);
         // If time is null it is handled later.
         if (time != null) {
-          GregorianCalendar gc =
-              new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-          // Set the hours, minutes and seconds of the time in the gregorian
-          // calendar. Set the year, month and date to be January 1 1970 like
-          // in the Time object.
-          // Use the 'set' method with those parameters,
-          // and not the 'setTime' method with the time parameter, since
-          // the Time object contains the current time zone and it's
-          // impossible to change it to 'GMT'.
-          gc.set(1970, Calendar.JANUARY, 1, time.getHours(), time.getMinutes(),
-                 time.getSeconds());
-          // Set the milliseconds explicitly, otherwise the milliseconds from
-          // the time the gc was initialized are used.
-          gc.set(GregorianCalendar.MILLISECOND, 0);
-          value = new TimeOfDayValue(gc);
+          value = new TimeOfDayValue(LocalTime.of(time.getHours(), time.getMinutes(), time.getSeconds()));
         }
         break;
       default:

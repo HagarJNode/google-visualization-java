@@ -14,9 +14,8 @@
 
 package com.google.visualization.datasource.datatable.value;
 
-import com.ibm.icu.util.ULocale;
-
 import java.util.Comparator;
+import java.util.Locale;
 
 /**
  * An abstract value of a single cell in a table.
@@ -130,16 +129,15 @@ public abstract class Value implements Comparable<Value> {
    * Returns a comparator that compares values according to a given locale
    * (in case of text values).
    *
-   * @param ulocale The ULocale defining the order relation of text values.
+   * @param locale The ULocale defining the order relation of text values.
    *
    * @return A comparator that compares values according to a given locale
    *     (in case of text values).
    */
-  public static Comparator<Value> getLocalizedComparator(
-      final ULocale ulocale) {
+  public static Comparator<Value> getLocalizedComparator(final Locale locale) {
     return new Comparator<Value>() {
-      private Comparator<TextValue> textValueComparator =
-          TextValue.getTextLocalizedComparator(ulocale);
+      private final Comparator<TextValue> textValueComparator =
+          TextValue.getTextLocalizedComparator(locale);
 
       @Override
       public int compare(Value value1, Value value2) {

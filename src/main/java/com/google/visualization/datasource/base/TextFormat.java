@@ -14,9 +14,8 @@
 
 package com.google.visualization.datasource.base;
 
-import com.ibm.icu.text.UFormat;
-
 import java.text.FieldPosition;
+import java.text.Format;
 import java.text.ParsePosition;
 
 /**
@@ -26,7 +25,8 @@ import java.text.ParsePosition;
  *
  * @author Hillel M.
  */
-public class TextFormat extends UFormat {
+public class TextFormat extends Format
+{
 
   /**
    * Formats a TextValue and appends the result to a StringBuffer.

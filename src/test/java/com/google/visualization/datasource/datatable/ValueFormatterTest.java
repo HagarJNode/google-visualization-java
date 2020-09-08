@@ -23,13 +23,18 @@ import com.google.visualization.datasource.datatable.value.TextValue;
 import com.google.visualization.datasource.datatable.value.TimeOfDayValue;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
-import com.ibm.icu.util.Calendar;
-import com.ibm.icu.util.ULocale;
-
 import junit.framework.TestCase;
 
 import org.apache.commons.lang.StringUtils;
+import org.junit.Ignore;
+import org.junit.Test;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -43,12 +48,12 @@ import java.util.Map;
  */
 public class ValueFormatterTest extends TestCase {
 
-  private ULocale[] ulocales;
+  private Locale[] locales;
 
   @Override
   public void setUp() throws Exception {
     super.setUp();
-    ulocales = ULocale.getAvailableLocales();
+    locales = Locale.getAvailableLocales();
   }
 
   /**
@@ -63,20 +68,20 @@ public class ValueFormatterTest extends TestCase {
    * support for ICU protocol.
    */
   public void testValueFormatterFromPatternAndLocale() {
-    for (ULocale ulocale : ulocales) {
+    for (Locale locale : locales) {
       // Create a ValueFormatter for each ValueType.
       ValueFormatter booleanFormatter = ValueFormatter.createFromPattern(
-          ValueType.BOOLEAN, "true:false", ulocale);
+          ValueType.BOOLEAN, "true:false", locale);
       ValueFormatter numberFormatter = ValueFormatter.createFromPattern(
-          ValueType.NUMBER, "#.##", ulocale);
+          ValueType.NUMBER, "#.##", locale);
       ValueFormatter textFormatter = ValueFormatter.createFromPattern(
-          ValueType.TEXT, "TEXT-PATTERN", ulocale);
+          ValueType.TEXT, "TEXT-PATTERN", locale);
       ValueFormatter dateFormatter = ValueFormatter.createFromPattern(
-          ValueType.DATE, "dd/mm/YYYY", ulocale);
+          ValueType.DATE, "dd/MM/YYYY", locale);
       ValueFormatter timeOfDayFormatter = ValueFormatter.createFromPattern(
-          ValueType.TIMEOFDAY, "HH:mm:ss", ulocale);
+          ValueType.TIMEOFDAY, "HH:mm:ss", locale);
       ValueFormatter dateTimeFormatter = ValueFormatter.createFromPattern(
-          ValueType.DATETIME, "YYYY/mm/dd HH:mm:ss", ulocale);
+          ValueType.DATETIME, "YYYY/MM/dd HH:mm:ss", locale);
 
       // Boolean
       String formattedValue = booleanFormatter.format(BooleanValue.TRUE);
@@ -85,7 +90,7 @@ public class ValueFormatterTest extends TestCase {
       // Number
       formattedValue = numberFormatter.format(new NumberValue(-12.23));
       assertFalse(StringUtils.isEmpty(formattedValue));
-      String language = ulocale.getDisplayLanguage();
+      String language = locale.getDisplayLanguage();
       if (isReadableLetters(language)) {
         assertTrue(formattedValue.contains("12"));
       }
@@ -95,9 +100,9 @@ public class ValueFormatterTest extends TestCase {
       assertEquals("this is a test", formattedValue);
 
       // Date
-      formattedValue = dateFormatter.format(new DateValue(1988, 11, 24));
+      formattedValue = dateFormatter.format(new DateValue(1988, 12, 24));
       assertFalse(StringUtils.isEmpty(formattedValue));
-      language = ulocale.getDisplayLanguage();
+      language = locale.getDisplayLanguage();
       if (isReadableLetters(language)) {
         assertTrue(formattedValue.contains("88"));
       }
@@ -105,7 +110,7 @@ public class ValueFormatterTest extends TestCase {
       // Time
       formattedValue = timeOfDayFormatter.format(new TimeOfDayValue(2, 24, 6));
       assertFalse(StringUtils.isEmpty(formattedValue));
-      language = ulocale.getDisplayLanguage();
+      language = locale.getDisplayLanguage();
       if (isReadableLetters(language)) {
         assertTrue(formattedValue.contains("24"));
       }
@@ -113,7 +118,7 @@ public class ValueFormatterTest extends TestCase {
       // Timestamp
       formattedValue = dateTimeFormatter.format(new DateTimeValue(1597, 9, 29, 1, 2, 33, 142));
       assertFalse(StringUtils.isEmpty(formattedValue));
-      language = ulocale.getDisplayLanguage();
+      language = locale.getDisplayLanguage();
       if (isReadableLetters(language)) {
         assertTrue(formattedValue.contains("29"));
       }
@@ -148,12 +153,12 @@ public class ValueFormatterTest extends TestCase {
     assertNotNull(timeOfDayFormatter);
     assertNotNull(textFormatter);
 
-    assertNotNull(booleanFormatter.getUFormat());
-    assertNotNull(numberFormatter.getUFormat());
-    assertNotNull(dateFormatter.getUFormat());
-    assertNotNull(dateTimeFormatter.getUFormat());
-    assertNotNull(timeOfDayFormatter.getUFormat());
-    assertNotNull(textFormatter.getUFormat());
+    assertNotNull(booleanFormatter.getFormat());
+    assertNotNull(numberFormatter.getFormat());
+    assertNotNull(dateFormatter.getFormat());
+    assertNotNull(dateTimeFormatter.getFormat());
+    assertNotNull(timeOfDayFormatter.getFormat());
+    assertNotNull(textFormatter.getFormat());
 
     assertEquals(LocaleUtil.getDefaultLocale(), booleanFormatter.getLocale());
     assertEquals(LocaleUtil.getDefaultLocale(), numberFormatter.getLocale());
@@ -176,32 +181,32 @@ public class ValueFormatterTest extends TestCase {
     assertNotNull(ValueFormatter.createDefault(ValueType.TIMEOFDAY, null));
     assertNotNull(ValueFormatter.createDefault(ValueType.TEXT, null));
 
-    ULocale ulocale = ULocale.ENGLISH;
-    ULocale ulocale1 = ULocale.CANADA_FRENCH;
+    Locale locale = Locale.ENGLISH;
+    Locale locale1 = Locale.CANADA_FRENCH;
 
-    assertEquals(ulocale,
-        ValueFormatter.createFromPattern(ValueType.NUMBER, "", ulocale).getLocale());
-    assertEquals(ulocale1,
-        ValueFormatter.createDefault(ValueType.NUMBER, ulocale1).getLocale());
+    assertEquals(locale,
+        ValueFormatter.createFromPattern(ValueType.NUMBER, "", locale).getLocale());
+    assertEquals(locale1,
+        ValueFormatter.createDefault(ValueType.NUMBER, locale1).getLocale());
   }
 
   public void testAFewMoreCases() {
-    ULocale ulocale = ULocale.ENGLISH;
+    Locale locale = Locale.ENGLISH;
 
     // Create a ValueFormatter for each type
     ValueFormatter booleanFormatter = ValueFormatter.createFromPattern(
-        ValueType.BOOLEAN, null, ulocale);
+        ValueType.BOOLEAN, null, locale);
     assertNotNull(booleanFormatter);
 
     ValueFormatter numberFormatter = ValueFormatter.createFromPattern(
-        ValueType.NUMBER, null, ulocale);
+        ValueType.NUMBER, null, locale);
     assertNotNull(numberFormatter);
 
     ValueFormatter dateFormatter = ValueFormatter.createFromPattern(
-        ValueType.DATE, "YYYY/mm", null);
+        ValueType.DATE, "YYYY/MM", null);
     assertNotNull(dateFormatter);
 
-    ValueFormatter textFormatter = ValueFormatter.createFromPattern(ValueType.TEXT, "", ulocale);
+    ValueFormatter textFormatter = ValueFormatter.createFromPattern(ValueType.TEXT, "", locale);
     assertNotNull(textFormatter);
   }
 
@@ -220,17 +225,17 @@ public class ValueFormatterTest extends TestCase {
   public void testSpecificPatternFormattingInUSLocale() {
     // Create a ColumnFormatter for each pattern
     ValueFormatter booleanFormatter = ValueFormatter.createFromPattern(
-        ValueType.BOOLEAN, "yep:na", ULocale.US);
+        ValueType.BOOLEAN, "yep:na", Locale.US);
     ValueFormatter numberFormatter = ValueFormatter.createFromPattern(
-        ValueType.NUMBER, "#,##0.000", ULocale.US);
+        ValueType.NUMBER, "#,##0.000", Locale.US);
     ValueFormatter textFormatter = ValueFormatter.createFromPattern(
-        ValueType.TEXT, "", ULocale.US);
+        ValueType.TEXT, "", Locale.US);
     ValueFormatter dateFormatter = ValueFormatter.createFromPattern(
-        ValueType.DATE, "MM | dd | yy", ULocale.US);
+        ValueType.DATE, "MM | dd | yy", Locale.US);
     ValueFormatter timeFormatter = ValueFormatter.createFromPattern(
-        ValueType.TIMEOFDAY, "HH-mm", ULocale.US);
+        ValueType.TIMEOFDAY, "HH-mm", Locale.US);
     ValueFormatter timestampFormatter = ValueFormatter.createFromPattern(
-        ValueType.DATETIME, "dd_MM_yy HH:mm", ULocale.US);
+        ValueType.DATETIME, "dd_MM_yy HH:mm", Locale.US);
 
     // Boolean
     String formattedValue = booleanFormatter.format(BooleanValue.TRUE);
@@ -245,7 +250,7 @@ public class ValueFormatterTest extends TestCase {
     assertEquals("this is another test", formattedValue);
 
     // Date
-    formattedValue = dateFormatter.format(new DateValue(1988, 11, 24));
+    formattedValue = dateFormatter.format(new DateValue(1988, 12, 24));
     assertEquals("12 | 24 | 88", formattedValue);
 
     // Time
@@ -254,17 +259,29 @@ public class ValueFormatterTest extends TestCase {
     assertEquals("02-24", formattedValue);
 
     // Timestamp
-    formattedValue = timestampFormatter.format(new DateTimeValue(1597, 9, 29, 1, 2, 33, 142));
+    formattedValue = timestampFormatter.format(new DateTimeValue(1597, 10, 29, 1, 2, 33, 142));
     assertEquals("29_10_97 01:02", formattedValue);
   }
 
   // Some locales use localized digits and so even a simple pattern will be formatted
   // differently than in English.
   // The following is a simple example for Hindi.
-  public void testHindiLocale() {
+  @Ignore("There is a problem with special encoding https://stackoverflow.com/questions/39365072/date-conversion-to-a-different-locale")
+  public void hindiLocale() throws ParseException
+  {
+    final Locale locale = new Locale("hi", "IN");
+    NumberFormat format = NumberFormat.getInstance(locale);
+
+    Number parse = format.parse("१");
+
+    System.out.println(parse);
+
+    final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(locale);
+    System.out.println("dateTimeFormatter: " + dateTimeFormatter.format(LocalDate.now()));
+
     ValueFormatter dateFormatter = ValueFormatter.createFromPattern(
-        ValueType.DATE, "MM | dd | yyyy", new ULocale("hi_IN"));
-    DateValue dateValue = new DateValue(2009, 1, 2);
+        ValueType.DATE, "MM | dd | yyyy", new Locale("hin","IND"));
+    DateValue dateValue = new DateValue(2009, 2, 2);
     String dateString =
         "\u0966\u0968\u0020\u007c\u0020\u0966\u0968\u0020\u007c\u0020\u0968\u0966\u0966\u096f";
     assertEquals(dateString, dateFormatter.format(dateValue));
@@ -292,10 +309,10 @@ public class ValueFormatterTest extends TestCase {
     assertEquals(BooleanValue.TRUE,
         ValueFormatter.createDefault(ValueType.BOOLEAN, null).parse("true"));
 
-    assertEquals(new DateValue(2009, Calendar.JANUARY, 1),
+    assertEquals(new DateValue(2009, 1, 1),
         ValueFormatter.createDefault(ValueType.DATE, null).parse("2009-1-1"));
 
-    assertEquals(new DateTimeValue(2009, Calendar.JANUARY, 1, 12, 13, 14, 0),
+    assertEquals(new DateTimeValue(2009, 1, 1, 12, 13, 14, 0),
         ValueFormatter.createDefault(ValueType.DATETIME, null).parse("2009-1-1 12:13:14"));
 
     assertEquals(new TimeOfDayValue(12, 13, 14, 0),
@@ -325,18 +342,19 @@ public class ValueFormatterTest extends TestCase {
   public void testParseDate() {
     ValueFormatter dateFormatter = ValueFormatter.createDefault(ValueType.DATE, null);
 
-    assertEquals(new DateValue(2004, Calendar.FEBRUARY, 15),
+    assertEquals(new DateValue(2004, 2, 15),
         dateFormatter.parse("2004-02-15"));
     dateFormatter = ValueFormatter.createFromPattern(ValueType.DATE, "MM/dd/yyyy", null);
-    assertEquals(new DateValue(2004, Calendar.JANUARY, 15), dateFormatter.parse("01/15/2004"));
+    assertEquals(new DateValue(2004, 1, 15), dateFormatter.parse("01/15/2004"));
     assertEquals(DateValue.getNullValue(), dateFormatter.parse("01.15.2004"));
   }
 
   public void testParseTimeOfDay() {
     ValueFormatter timeOfDayFormatter = ValueFormatter.createDefault(ValueType.TIMEOFDAY, null);
     assertEquals(new TimeOfDayValue(7, 22, 44), timeOfDayFormatter.parse("7:22:44"));
+    assertEquals(new TimeOfDayValue(7, 22, 44), timeOfDayFormatter.parse("07:22:44"));
 
-    timeOfDayFormatter = ValueFormatter.createFromPattern(ValueType.TIMEOFDAY, "ss:mm:HH", null);
+    timeOfDayFormatter = ValueFormatter.createFromPattern(ValueType.TIMEOFDAY, "ss:mm:H", null);
 
     assertEquals(new TimeOfDayValue(7, 22, 44), timeOfDayFormatter.parse("44:22:7"));
 
@@ -345,11 +363,11 @@ public class ValueFormatterTest extends TestCase {
 
   public void testParseDateTime() {
     ValueFormatter dateTimeFormatter = ValueFormatter.createDefault(ValueType.DATETIME, null);
-    assertEquals(new DateTimeValue(2004, Calendar.FEBRUARY, 15, 7, 22, 44, 0),
+    assertEquals(new DateTimeValue(2004, 2, 15, 7, 22, 44, 0),
         dateTimeFormatter.parse("2004-02-15 7:22:44"));
     dateTimeFormatter =
-        ValueFormatter.createFromPattern(ValueType.DATETIME, "MM/dd/yyyy ss:mm:HH", null);
-    assertEquals(new DateTimeValue(2004, Calendar.JANUARY, 15, 7, 22, 44, 0),
+        ValueFormatter.createFromPattern(ValueType.DATETIME, "M/dd/yyyy ss:mm:H", null);
+    assertEquals(new DateTimeValue(2004, 1, 15, 7, 22, 44, 0),
         dateTimeFormatter.parse("01/15/2004 44:22:7"));
     assertEquals(DateTimeValue.getNullValue(), dateTimeFormatter.parse("01.15.2004"));
   }

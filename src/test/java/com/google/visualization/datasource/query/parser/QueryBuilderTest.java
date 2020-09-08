@@ -57,6 +57,7 @@ import com.google.visualization.datasource.query.scalarfunction.Upper;
 
 import junit.framework.TestCase;
 
+import java.time.DateTimeException;
 import java.util.List;
 import java.util.Set;
 
@@ -860,15 +861,15 @@ public class QueryBuilderTest extends TestCase {
 
   public void testDateLiterals() throws Exception {
     Query query = QueryBuilder.getInstance().parseQuery("WHERE c1 > DATE '2006-08-23'");
-    assertEquals(new DateValue(2006, 7, 23),
+    assertEquals(new DateValue(2006, 8, 23),
         ((ColumnValueFilter) query.getFilter()).getValue());
     query = QueryBuilder.getInstance().parseQuery(
         "WHERE c1 = DaTeTiMe '2007-01-30 15:33:22.432'");
-    assertEquals(new DateTimeValue(2007, 0, 30, 15, 33, 22, 432),
+    assertEquals(new DateTimeValue(2007, 1, 30, 15, 33, 22, 432),
         ((ColumnValueFilter) query.getFilter()).getValue());
     query = QueryBuilder.getInstance().parseQuery(
         "WHERE c1 = timesTaMP '2007-01-30 15:33:22.432'");
-    assertEquals(new DateTimeValue(2007, 0, 30, 15, 33, 22, 432),
+    assertEquals(new DateTimeValue(2007, 1, 30, 15, 33, 22, 432),
         ((ColumnValueFilter) query.getFilter()).getValue());
     query = QueryBuilder.getInstance().parseQuery("WHERE c1 != TimeOfDay '15:33:22'");
     assertEquals(new TimeOfDayValue(15, 33, 22),
@@ -886,7 +887,7 @@ public class QueryBuilderTest extends TestCase {
       // 2005 was not a leap year.
       QueryBuilder.getInstance().parseQuery("WHERE c1 > DATE '2005-02-29'");
       fail("Should have thrown an exception.");
-    } catch (InvalidQueryException e) {
+    } catch (InvalidQueryException | DateTimeException e) {
       // Supposed to throw an exception.
     }
   }

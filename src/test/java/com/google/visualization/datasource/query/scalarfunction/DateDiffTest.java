@@ -67,16 +67,16 @@ public class DateDiffTest extends TestCase {
   public void testEvaluate() {
     DateDiff dateDiff = DateDiff.getInstance();
     List<Value> valuesList1 =
-        Lists.<Value>newArrayList(new DateValue(2008, 1, 13),
-            new DateValue(2008, 2, 13));
-    List<Value> valuesList2 = Lists.newArrayList(new DateValue(2008, 1, 13),
-            new DateTimeValue(2008, 1, 13, 9, 12, 22, 333));
+        Lists.<Value>newArrayList(new DateValue(2008, 2, 13),
+            new DateValue(2008, 3, 13));
+    List<Value> valuesList2 = Lists.newArrayList(new DateValue(2008, 2, 13),
+            new DateTimeValue(2008, 2, 13, 9, 12, 22, 333));
     List<Value> valuesList3 =
-        Lists.<Value>newArrayList(new DateTimeValue(2008, 6, 1, 9, 12, 22, 333),
-            new DateTimeValue(2008, 10, 1, 9, 12, 22, 333));
+        Lists.<Value>newArrayList(new DateTimeValue(2008, 7, 1, 9, 12, 22, 333),
+            new DateTimeValue(2008, 11, 1, 9, 12, 22, 333));
     List<Value> valuesList4 = Lists.<Value>newArrayList(new DateTimeValue(
-        2008, 10, 1, 9, 12, 22, 333),
-        new DateTimeValue(2008, 6, 1, 9, 12, 20, 333));
+        2008, 11, 1, 9, 12, 22, 333),
+        new DateTimeValue(2008, 7, 1, 9, 12, 20, 333));
 
     assertEquals(new NumberValue(-29), dateDiff.evaluate(valuesList1));
     assertEquals(new NumberValue(0), dateDiff.evaluate(valuesList2));

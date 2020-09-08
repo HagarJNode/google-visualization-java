@@ -20,11 +20,10 @@ import com.google.visualization.datasource.datatable.value.NumberValue;
 import com.google.visualization.datasource.datatable.value.TextValue;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
-import com.ibm.icu.util.ULocale;
-
 import junit.framework.TestCase;
 
 import java.util.Comparator;
+import java.util.Locale;
 
 /**
  * TableCell Tester.
@@ -113,9 +112,9 @@ public class TableCellTest extends TestCase {
   public void testLocalizedComparator() {
     // Test that strings are compared according to the given locale.
     Comparator<TableCell> rootComparator = TableCell.getLocalizedComparator(
-        ULocale.ROOT);
+        Locale.ROOT);
     Comparator<TableCell> frComparator = TableCell.getLocalizedComparator(
-        ULocale.FRENCH);
+        Locale.FRENCH);
     TableCell cell1 = new TableCell(new TextValue("cot\u00E9"));
     TableCell cell2 = new TableCell(new TextValue("c\u00F4te"));
     assertEquals(-1, rootComparator.compare(cell1, cell2));

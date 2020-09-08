@@ -16,9 +16,11 @@ package com.google.visualization.datasource.datatable.value;
 
 import com.google.visualization.datasource.base.TypeMismatchException;
 
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
 import junit.framework.TestCase;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * A unit test for ValueType.
@@ -117,12 +119,10 @@ public class ValueTypeTest extends TestCase {
 
     // Test creating a DateValue.
     try {
-      GregorianCalendar calendar = new GregorianCalendar(2009, 2, 15);
-      calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-      Value v = ValueType.DATE.createValue(calendar);
+      Value v = ValueType.DATE.createValue(LocalDate.of(2009, 2, 15));
       assertTrue(v.getType() == ValueType.DATE);
       DateValue dv = (DateValue) v;
-      assertEquals(dv.compareTo(new DateValue(calendar)), 0);
+      assertEquals(dv.compareTo(new DateValue(LocalDate.of(2009, 2, 15))), 0);
     } catch (TypeMismatchException e) {
       fail();
     }
@@ -147,12 +147,10 @@ public class ValueTypeTest extends TestCase {
 
     // Test creating a DateTimeValue.
     try {
-      GregorianCalendar calendar = new GregorianCalendar(2009, 2, 15, 12, 30, 14);
-      calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-      Value v = ValueType.DATETIME.createValue(calendar);
+      Value v = ValueType.DATETIME.createValue(LocalDateTime.of(2009, 2, 15, 12, 30, 14));
       assertTrue(v.getType() == ValueType.DATETIME);
       DateTimeValue dtv = (DateTimeValue) v;
-      assertEquals(dtv.compareTo(new DateTimeValue(calendar)), 0);
+      assertEquals(dtv.compareTo(new DateTimeValue(LocalDateTime.of(2009, 2, 15, 12, 30, 14))), 0);
     } catch (TypeMismatchException e) {
       fail();
     }
@@ -177,12 +175,10 @@ public class ValueTypeTest extends TestCase {
 
     // Test creating a TimeOfDayValue.
     try {
-      GregorianCalendar calendar = new GregorianCalendar(2009, 2, 15, 12, 30, 14);
-      calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-      Value v = ValueType.TIMEOFDAY.createValue(calendar);
+      Value v = ValueType.TIMEOFDAY.createValue(LocalTime.of(12, 30, 14));
       assertTrue(v.getType() == ValueType.TIMEOFDAY);
       TimeOfDayValue todv = (TimeOfDayValue) v;
-      assertEquals(todv.compareTo(new TimeOfDayValue(calendar)), 0);
+      assertEquals(todv.compareTo(new TimeOfDayValue(LocalTime.of(12, 30, 14))), 0);
     } catch (TypeMismatchException e) {
       fail();
     }

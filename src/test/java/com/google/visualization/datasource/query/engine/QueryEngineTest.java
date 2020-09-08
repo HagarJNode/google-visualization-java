@@ -52,12 +52,11 @@ import com.google.visualization.datasource.query.scalarfunction.Quotient;
 import com.google.visualization.datasource.query.scalarfunction.Sum;
 import com.google.visualization.datasource.query.scalarfunction.TimeComponentExtractor;
 
-import com.ibm.icu.util.ULocale;
-
 import junit.framework.TestCase;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Unit tests for DataTableDataSourceTest.
@@ -114,7 +113,7 @@ public class QueryEngineTest extends TestCase {
    */
   public void testEmptyQuery() throws Exception {
     Query q = new Query();
-    DataTable res = QueryEngine.executeQuery(q, input, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, input, Locale.US);
     List<ColumnDescription> cols = res.getColumnDescriptions();
     assertEquals(3, cols.size());
     assertEquals("name", cols.get(0).getId());
@@ -139,7 +138,7 @@ public class QueryEngineTest extends TestCase {
     sort.addSort(new ColumnSort(new SimpleColumn("weight"),
         SortOrder.ASCENDING));
     q.setSort(sort);
-    DataTable res = QueryEngine.executeQuery(q, input, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, input, Locale.US);
 
     assertEquals(3, res.getRows().size());
     assertEquals("111.0", res.getRows().get(0).getCells().get(1).toString());
@@ -156,7 +155,7 @@ public class QueryEngineTest extends TestCase {
     sort.addSort(new ColumnSort(new SimpleColumn("weight"),
         SortOrder.DESCENDING));
     q.setSort(sort);
-    DataTable res = QueryEngine.executeQuery(q, input, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, input, Locale.US);
 
     assertEquals(3, res.getRows().size());
     assertEquals("333.0", res.getRows().get(0).getCells().get(1).toString());
@@ -172,7 +171,7 @@ public class QueryEngineTest extends TestCase {
     QuerySort sort = new QuerySort();
     sort.addSort(new ColumnSort(new SimpleColumn("name"), SortOrder.ASCENDING));
     q.setSort(sort);
-    DataTable res = QueryEngine.executeQuery(q, input, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, input, Locale.US);
 
     assertEquals(3, res.getRows().size());
     assertEquals("aaa", res.getRows().get(0).getCells().get(0).toString());
@@ -189,7 +188,7 @@ public class QueryEngineTest extends TestCase {
     sort.addSort(new ColumnSort(new SimpleColumn("name"),
         SortOrder.DESCENDING));
     q.setSort(sort);
-    DataTable res = QueryEngine.executeQuery(q, input, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, input, Locale.US);
 
     assertEquals(3, res.getRows().size());
     assertEquals("ccc", res.getRows().get(0).getCells().get(0).toString());
@@ -204,7 +203,7 @@ public class QueryEngineTest extends TestCase {
     Query q = new Query();
     QuerySelection sel = new QuerySelection();
     q.setSelection(sel);
-    DataTable res = QueryEngine.executeQuery(q, input, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, input, Locale.US);
     List<ColumnDescription> cols = res.getColumnDescriptions();
 
     assertEquals(3, cols.size());
@@ -224,7 +223,7 @@ public class QueryEngineTest extends TestCase {
     QuerySelection sel = new QuerySelection();
     sel.addColumn(new SimpleColumn("name"));
     q.setSelection(sel);
-    DataTable res = QueryEngine.executeQuery(q, input, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, input, Locale.US);
     List<ColumnDescription> cols = res.getColumnDescriptions();
 
     assertEquals(1, cols.size());
@@ -243,7 +242,7 @@ public class QueryEngineTest extends TestCase {
     sel.addColumn(new SimpleColumn("weight"));
     sel.addColumn(new SimpleColumn("isPig"));
     q.setSelection(sel);
-    DataTable res = QueryEngine.executeQuery(q, input, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, input, Locale.US);
     List<ColumnDescription> cols = res.getColumnDescriptions();
 
     assertEquals(2, cols.size());
@@ -270,7 +269,7 @@ public class QueryEngineTest extends TestCase {
     QuerySelection selection = new QuerySelection();
     selection.addColumn(new SimpleColumn("name"));
     q.setSelection(selection);
-    DataTable res = QueryEngine.executeQuery(q, input, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, input, Locale.US);
     List<ColumnDescription> cols = res.getColumnDescriptions();
 
     assertEquals(1, cols.size());
@@ -306,7 +305,7 @@ public class QueryEngineTest extends TestCase {
     q.setSelection(selection);
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
 
@@ -361,7 +360,7 @@ public class QueryEngineTest extends TestCase {
     q.setSelection(selection);
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
@@ -427,7 +426,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res.clone(), ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res.clone(), Locale.US);
 
     // Test column description
     List<ColumnDescription> cols =
@@ -474,7 +473,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    result = QueryEngine.executeQuery(q, res.clone(), ULocale.US);
+    result = QueryEngine.executeQuery(q, res.clone(), Locale.US);
 
     // Test column description
     cols = result.getColumnDescriptions();
@@ -523,7 +522,7 @@ public class QueryEngineTest extends TestCase {
     q.setPivot(pivot);
 
     q.validate();
-    DataTable result = QueryEngine.executeQuery(q, res.clone(), ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res.clone(), Locale.US);
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
 
@@ -563,7 +562,7 @@ public class QueryEngineTest extends TestCase {
 
     q1.validate();
 
-    DataTable result1 = QueryEngine.executeQuery(q1, res.clone(), ULocale.US);
+    DataTable result1 = QueryEngine.executeQuery(q1, res.clone(), Locale.US);
 
     // Test column description
     List<ColumnDescription> cols1 = result1.getColumnDescriptions();
@@ -616,7 +615,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
@@ -667,7 +666,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    result = QueryEngine.executeQuery(q, res, ULocale.US);
+    result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     cols = result.getColumnDescriptions();
@@ -720,7 +719,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
@@ -767,7 +766,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    result = QueryEngine.executeQuery(q, res, ULocale.US);
+    result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     cols = result.getColumnDescriptions();
@@ -823,7 +822,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
@@ -859,7 +858,7 @@ public class QueryEngineTest extends TestCase {
 
     q.setSelection(selection);
     q.validate();
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
@@ -911,7 +910,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
@@ -951,7 +950,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    DataTable result1 = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result1 = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols1 = result1.getColumnDescriptions();
@@ -994,7 +993,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
@@ -1049,7 +1048,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
@@ -1115,7 +1114,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
 
@@ -1150,7 +1149,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
@@ -1204,7 +1203,7 @@ public class QueryEngineTest extends TestCase {
     q.setSelection(selection);
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
@@ -1265,7 +1264,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols = result.getColumnDescriptions();
@@ -1322,7 +1321,7 @@ public class QueryEngineTest extends TestCase {
 
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols =  result.getColumnDescriptions();
@@ -1360,7 +1359,7 @@ public class QueryEngineTest extends TestCase {
     
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols =  result.getColumnDescriptions();
@@ -1413,7 +1412,7 @@ public class QueryEngineTest extends TestCase {
   
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols =  result.getColumnDescriptions();
@@ -1452,7 +1451,7 @@ public class QueryEngineTest extends TestCase {
         "New isAlive Label");
     query.setLabels(labels);
 
-    DataTable res = QueryEngine.executeQuery(query, data, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(query, data, Locale.US);
 
     assertEquals("Pet Name", res.getColumnDescription("name").getLabel());
     assertEquals("New isAlive Label", res.getColumnDescription("isAlive").getLabel());
@@ -1480,13 +1479,13 @@ public class QueryEngineTest extends TestCase {
     labels.addLabel(selectedColumn, "foo");
     query.setLabels(labels);
     QueryFormat format = new QueryFormat();
-    format.addPattern(selectedColumn, "'$'@@@");
+    format.addPattern(selectedColumn, "'$'#.##");
     query.setUserFormatOptions(format);
 
     DataTable data = MockDataSource.getData(1);
 
     // Also tests different locale (note the commas in the numbers)
-    DataTable res = QueryEngine.executeQuery(query, data, ULocale.FRENCH);
+    DataTable res = QueryEngine.executeQuery(query, data, Locale.FRENCH);
 
     List<ColumnDescription> columnDescriptions = res.getColumnDescriptions();
     assertEquals(5, columnDescriptions.size());
@@ -1494,7 +1493,7 @@ public class QueryEngineTest extends TestCase {
     assertEquals("$2,29", res.getRow(0).getCell(1).getFormattedValue());
     assertEquals("$1,14", res.getRow(0).getCell(2).getFormattedValue());
     assertEquals("$4,57", res.getRow(0).getCell(3).getFormattedValue());
-    assertEquals("$0,571", res.getRow(0).getCell(4).getFormattedValue());
+    assertEquals("$0,57", res.getRow(0).getCell(4).getFormattedValue());
     assertEquals("Collection,2.0 foo", columnDescriptions.get(0).getLabel());
     assertEquals("Contraband,2.0 foo", columnDescriptions.get(1).getLabel());
     assertEquals("Contraband,4.0 foo", columnDescriptions.get(2).getLabel());
@@ -1507,7 +1506,7 @@ public class QueryEngineTest extends TestCase {
     Query q = QueryBuilder.getInstance().parseQuery("SELECT isAlive, sum(weight), sum(weight)+1"
         + " GROUP BY isAlive");
     DataTable data = MockDataSource.getData(0);
-    DataTable res = QueryEngine.executeQuery(q, data, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, data, Locale.US);
     assertEquals(2, res.getNumberOfRows());
     assertEquals("false", res.getRow(0).getCell(0).getValue().toString());
     assertEquals("2011.0", res.getRow(0).getCell(1).getValue().toString());
@@ -1521,7 +1520,7 @@ public class QueryEngineTest extends TestCase {
   public void testFormatStoresPattern() throws Exception {
     Query q = QueryBuilder.getInstance().parseQuery("FORMAT weight 'a#'");
     DataTable data = MockDataSource.getData(0);
-    DataTable res = QueryEngine.executeQuery(q, data, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, data, Locale.US);
     assertEquals("a#", res.getColumnDescription("weight").getPattern());
   }
   
@@ -1530,14 +1529,14 @@ public class QueryEngineTest extends TestCase {
         + "ORDER BY weight LIMIT 3 OFFSET 2");
     DataTable data = MockDataSource.getData(0).clone();
     data.getColumnDescription("weight").setPattern("f#");
-    DataTable res = QueryEngine.executeQuery(q, data, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, data, Locale.US);
     assertEquals("f#", res.getColumnDescription("weight").getPattern());
   }
 
   public void testQueryWithLikeOperator() throws InvalidQueryException {
     Query q = QueryBuilder.getInstance().parseQuery("SELECT Band WHERE Band like 'Co%'");
     DataTable data = MockDataSource.getData(1).clone();
-    DataTable res = QueryEngine.executeQuery(q, data, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, data, Locale.US);
     assertEquals(28, res.getNumberOfRows());
     for (int i = 0; i < res.getNumberOfRows(); i++) {
       assertTrue(res.getValue(i, 0).toString().startsWith("Co"));
@@ -1547,7 +1546,7 @@ public class QueryEngineTest extends TestCase {
   public void testScalarFunctions() throws InvalidQueryException {
     Query q = QueryBuilder.getInstance().parseQuery("SELECT upper(name),salary format salary '$0'");
     DataTable data = MockDataSource.getData(3);
-    DataTable res = QueryEngine.executeQuery(q, data, ULocale.US);
+    DataTable res = QueryEngine.executeQuery(q, data, Locale.US);
     assertEquals("JOHN", res.getValue(0, 0).toString());
     assertEquals("$1000", res.getCell(0, 1).getFormattedValue());
   }
@@ -1562,7 +1561,7 @@ public class QueryEngineTest extends TestCase {
     
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols =  result.getColumnDescriptions();
@@ -1602,7 +1601,7 @@ public class QueryEngineTest extends TestCase {
     
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols =  result.getColumnDescriptions();
@@ -1641,7 +1640,7 @@ public class QueryEngineTest extends TestCase {
     
     q.validate();
 
-    DataTable result = QueryEngine.executeQuery(q, res, ULocale.US);
+    DataTable result = QueryEngine.executeQuery(q, res, Locale.US);
 
     // Test column description
     List<ColumnDescription> cols =  result.getColumnDescriptions();

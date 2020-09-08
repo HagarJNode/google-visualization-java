@@ -14,9 +14,7 @@
 
 package com.google.visualization.datasource.datatable.value;
 
-import com.ibm.icu.util.Calendar;
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
+import java.time.LocalDateTime;
 
 /**
  * A value of type date-time. Used to represent a specific day in a given year as well as a
@@ -45,10 +43,10 @@ public class DateTimeValue extends Value {
   }
 
   /**
-   * Underlying GregorianCalendar.
-   * The calendar is immutable and is set only in the constructor.
+   * Underlying LocalDateTime½
+   * The is immutable and is set only in the constructor.
    */
-  private GregorianCalendar calendar;
+  private LocalDateTime localDateTime;
 
   /**
    * Stores the hash code for this DateTime. Do not use GregorianCalendar
@@ -69,8 +67,6 @@ public class DateTimeValue extends Value {
   /**
    * Creates a new DateTime value.
    * The input is checked using a gregorian calendar.
-   * Note this uses the java convention for months:
-   * January = 0, ..., December = 11.
    *
    * @param year The year.
    * @param month The month.
@@ -83,13 +79,15 @@ public class DateTimeValue extends Value {
    * @throws IllegalArgumentException Thrown if one of the
    *     parameters is illegal.
    */
-  public DateTimeValue(int year, int month, int dayOfMonth, int hours,
-      int minutes, int seconds, int milliseconds) {
-    // Constructs a GregorianCalendar with the given date and time.
-    calendar = new GregorianCalendar(year, month, dayOfMonth, hours,
-        minutes, seconds);
-    calendar.set(GregorianCalendar.MILLISECOND, milliseconds);
-    calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+  public DateTimeValue(final int year,
+                       final int month,
+                       final int dayOfMonth,
+                       final int hours,
+                       final int minutes,
+                       final int seconds,
+                       final int milliseconds) {
+
+    localDateTime = LocalDateTime.of(year, month, dayOfMonth, hours, minutes, seconds, milliseconds * 1000000);
 
     // Check input.
     // A RunTimeException is thrown here since it is very unusual for structured
@@ -116,17 +114,13 @@ public class DateTimeValue extends Value {
    * and millisecond correspond to the values returned by calendar.get(field)
    * of the given calendar.
    *
-   * @param calendar A Gregorian calendar on which to base this instance.
+   * @param localDateTime which to base this instance.
    *
    * @throws IllegalArgumentException When calendar time zone is not set
    *     to GMT.
    */
-  public DateTimeValue(GregorianCalendar calendar) {
-    if (!calendar.getTimeZone().equals(TimeZone.getTimeZone("GMT"))) {
-      throw new IllegalArgumentException(
-          "Can't create DateTimeValue from GregorianCalendar that is not GMT.");
-    }
-    this.calendar = (GregorianCalendar) calendar.clone();
+  public DateTimeValue(final LocalDateTime localDateTime) {
+    this.localDateTime = localDateTime;
   }
 
   /**
@@ -135,7 +129,7 @@ public class DateTimeValue extends Value {
    * @return The year.
    */
   public int getYear() {
-    return calendar.get(GregorianCalendar.YEAR);
+    return localDateTime.getYear();
   }
 
   /**
@@ -144,7 +138,7 @@ public class DateTimeValue extends Value {
    * @return The month.
    */
   public int getMonth() {
-    return calendar.get(GregorianCalendar.MONTH);
+    return localDateTime.getMonthValue();
   }
 
   /**
@@ -153,7 +147,7 @@ public class DateTimeValue extends Value {
    * @return The day of month.
    */
   public int getDayOfMonth() {
-    return calendar.get(GregorianCalendar.DAY_OF_MONTH);
+    return localDateTime.getDayOfMonth();
   }
 
   /**
@@ -162,7 +156,7 @@ public class DateTimeValue extends Value {
    * @return The hour of day.
    */
   public int getHourOfDay() {
-    return calendar.get(GregorianCalendar.HOUR_OF_DAY);
+    return localDateTime.getHour();
   }
 
   /**
@@ -171,7 +165,7 @@ public class DateTimeValue extends Value {
    * @return The minute.
    */
   public int getMinute() {
-    return calendar.get(GregorianCalendar.MINUTE);
+    return localDateTime.getMinute();
   }
 
   /**
@@ -180,7 +174,7 @@ public class DateTimeValue extends Value {
    * @return The second.
    */
   public int getSecond() {
-    return calendar.get(GregorianCalendar.SECOND);
+    return localDateTime.getSecond();
   }
 
   /**
@@ -189,7 +183,7 @@ public class DateTimeValue extends Value {
    * @return The millisecond.
    */
   public int getMillisecond() {
-    return calendar.get(GregorianCalendar.MILLISECOND);
+    return localDateTime.getNano() / 1000000;
   }
 
 
@@ -209,7 +203,7 @@ public class DateTimeValue extends Value {
       return "null";
     }
    String result = String.format("%1$d-%2$02d-%3$02d %4$02d:%5$02d:%6$02d",
-       getYear(), getMonth() + 1, getDayOfMonth(), getHourOfDay(), getMinute(),
+       getYear(), getMonth(), getDayOfMonth(), getHourOfDay(), getMinute(),
        getSecond());
     if (getMillisecond() > 0) {
       result += "." + String.format("%1$03d", getMillisecond());
@@ -247,7 +241,7 @@ public class DateTimeValue extends Value {
       return 1;
     }
     // Calendar implements compareTo by converting to milliseconds.
-    return (calendar.compareTo(otherDateTime.getCalendar()));
+    return localDateTime.compareTo(otherDateTime.getLocalDateTime());
   }
 
   @Override
@@ -269,11 +263,11 @@ public class DateTimeValue extends Value {
   }
 
   @Override
-  public Calendar getObjectToFormat() {
+  public LocalDateTime getObjectToFormat() {
     if (isNull()) {
       return null;
     }
-    return calendar;
+    return localDateTime;
   }
 
   /**
@@ -283,11 +277,11 @@ public class DateTimeValue extends Value {
    *
    * @throws NullValueException Thrown when this Value is NULL_VALUE.
    */
-  public GregorianCalendar getCalendar() {
+  public LocalDateTime getLocalDateTime() {
     if (isNull()) {
       throw new NullValueException("This object is null");
     }
-    return calendar;
+    return localDateTime;
   }
 
   /**
@@ -295,7 +289,7 @@ public class DateTimeValue extends Value {
    */
   @Override
   protected String innerToQueryString() {
-    String s = "DATETIME '" + getYear() + "-" + (getMonth() + 1) + "-"
+    String s = "DATETIME '" + getYear() + "-" + getMonth() + "-"
         + getDayOfMonth() + " " + getHourOfDay() + ":" + getMinute() + ":"
         + getSecond();
     int milli = getMillisecond();

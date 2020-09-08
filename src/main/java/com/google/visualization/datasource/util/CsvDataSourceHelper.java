@@ -26,7 +26,6 @@ import com.google.visualization.datasource.datatable.value.Value;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
 import au.com.bytecode.opencsv.CSVReader;
-import com.ibm.icu.util.ULocale;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -38,6 +37,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -55,7 +55,7 @@ public class CsvDataSourceHelper {
   private CsvDataSourceHelper() {}
 
   /**
-   * @see #read(java.io.Reader, java.util.List, Boolean, ULocale)
+   * @see #read(java.io.Reader, java.util.List, Boolean)
    */
   public static DataTable read(Reader reader, List<ColumnDescription> columnDescriptions,
       Boolean headerRow)
@@ -85,8 +85,10 @@ public class CsvDataSourceHelper {
    * @throws IOException In case of error reading from the reader.
    * @throws CsvDataSourceException In case of specific csv error.
    */
-  public static DataTable read(Reader reader, List<ColumnDescription> columnDescriptions,
-      Boolean headerRow, ULocale locale)
+  public static DataTable read(final Reader reader,
+                               List<ColumnDescription> columnDescriptions,
+                               final Boolean headerRow,
+                               final Locale locale)
       throws IOException, CsvDataSourceException {
     DataTable dataTable = new DataTable();
 

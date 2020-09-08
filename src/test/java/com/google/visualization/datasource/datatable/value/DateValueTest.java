@@ -14,10 +14,10 @@
 
 package com.google.visualization.datasource.datatable.value;
 
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
-
 import junit.framework.TestCase;
+
+import java.time.DateTimeException;
+import java.time.LocalDate;
 
 /**
  * Test for DateValue.
@@ -41,20 +41,20 @@ public class DateValueTest extends TestCase {
     try {
       new DateValue(1990, 11, -1);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
     try {
       DateValue value = new DateValue(1990, 11, 0);
       // Shouldn't be here.
       assertFalse(true);
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
     try {
       new DateValue(1990, 11, 32);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
   }
@@ -67,13 +67,13 @@ public class DateValueTest extends TestCase {
     try {
       new DateValue(1990, 13, 1);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
     try {
       new DateValue(1990, -2, 1);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
   }
@@ -81,36 +81,33 @@ public class DateValueTest extends TestCase {
   public void testConstructorSpecialDatesValues() {
     try {
       // February doesn't have 30 days.
-      new DateValue(1990, 1, 30);
+      new DateValue(1990, 2, 30);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException  | DateTimeException e) {
       // Expected behavior.
     }
     try {
       // February doesn't have 29 days in 2007.
-      new DateValue(2007, 1, 29);
+      new DateValue(2007, 2, 29);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
     try {
       // September doesn't have 31 days.
-      new DateValue(2007, 8, 31);
+      new DateValue(2007, 9, 31);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
   }
 
-  /**
-   * Months in DateValue are represented by the numbers {0, .., 11} as in Java.
-   */
   public void testJavaMonthConvention() {
     // Check the Exception is thrown.
     try {
-      new DateValue(1990, 12, 10);
+      new DateValue(1990, 13, 10);
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException | DateTimeException e) {
       // Expected behavior.
     }
   }
@@ -119,51 +116,37 @@ public class DateValueTest extends TestCase {
     // Test if the construction does not fail.
     try {
       // 1st of February 2300.
-      DateValue value = new DateValue(2300, 1, 1);
+      DateValue value = new DateValue(2300, 2, 1);
       assertNotNull(value);
       assertFalse(value.isNull());
     } catch (IllegalArgumentException e) {
       // Should not be here
-      assertFalse("An exception was not supposed to be thorwn",  true);
+      assertFalse("An exception was not supposed to be thrown",  true);
     }
     try {
       // 1st of January 130.
-      DateValue value = new DateValue(130, 0, 1);
+      DateValue value = new DateValue(130, 1, 1);
       assertNotNull(value);
       assertFalse(value.isNull());
     } catch (IllegalArgumentException e) {
       // Should not be here
-      assertFalse("An exception was not supposed to be thorwn",  true);
+      assertFalse("An exception was not supposed to be thrown",  true);
     }
     // This is the 29th of February of 2009 which is a real date.
     try {
-      DateValue value = new DateValue(2008, 1, 29);
+      DateValue value = new DateValue(2008, 2, 29);
       assertNotNull(value);
       assertFalse(value.isNull());
     } catch (IllegalArgumentException e) {
       // Should not be here
-      assertFalse("An exception was not supposed to be thorwn",  true);
+      assertFalse("An exception was not supposed to be thrown",  true);
     }
   }
 
   public void testCalendarConstructor() {
-    GregorianCalendar calendar = new GregorianCalendar(2006, 1, 3);
-    DateValue value = null;
-    calendar.setTimeZone(TimeZone.getTimeZone("IST"));
-    // Check exception thrown for non GMT time zone.
-    try {
-      value = new DateValue(calendar);
-      fail();
-    } catch (IllegalArgumentException iae) {
-      // Expected behavior.
-    }
-    calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-    // Check that an exception is not thrown for GMT time zone.
-    try {
-      value = new DateValue(calendar);
-    } catch (IllegalArgumentException iae) {
-      fail();
-    }
+    final LocalDate localDate = LocalDate.of(2006, 1, 3);
+    final DateValue value = new DateValue(localDate);
+
     // Verify values - default milliseconds.
     assertEquals(2006, value.getYear());
     assertEquals(1, value.getMonth());
@@ -178,9 +161,9 @@ public class DateValueTest extends TestCase {
   }
 
   public void testToString() {
-    DateValue value = new DateValue(500, 4, 20);
+    DateValue value = new DateValue(500, 5, 20);
     assertEquals(value.toString(),  "500-05-20");
-    value = new DateValue(2200, 3, 11);
+    value = new DateValue(2200, 4, 11);
     assertEquals(value.toString(),  "2200-04-11");
     value = DateValue.getNullValue();
     assertEquals(value.toString(),  "null");
@@ -266,7 +249,7 @@ public class DateValueTest extends TestCase {
 
   public void testCompareNullCases() {
     // Test null cases and classCast issues.
-    DateValue val = new DateValue(1000, 10, 10);
+    DateValue val = new DateValue(1000, 11, 10);
     try {
       val.compareTo(null);
       fail();
@@ -281,7 +264,7 @@ public class DateValueTest extends TestCase {
     }
 
     // Test NULL_VALUE cases.
-    DateValue val1 = new DateValue(1111, 1, 1);
+    DateValue val1 = new DateValue(1111, 2, 1);
     DateValue valNull = DateValue.getNullValue();
 
     assertTrue(0 < val1.compareTo(valNull));
@@ -292,20 +275,19 @@ public class DateValueTest extends TestCase {
     assertTrue(0 == val.compareTo(val));
 
     // Test that compareTo can cast.
-    Value val2 = new DateValue(1000, 10, 12);
+    Value val2 = new DateValue(1000, 11, 12);
     assertTrue(0 > val.compareTo(val2));
     Value val3 = DateValue.getNullValue();
     assertTrue(0 < val.compareTo(val3));
   }
 
   public void testGetValueToFormat() {
-    DateValue val = new DateValue(500, 2, 30);
-    DateValue valNull = DateValue.getNullValue();
+    final DateValue val = new DateValue(500, 3, 30);
+    final DateValue valNull = DateValue.getNullValue();
 
     assertNull(valNull.getObjectToFormat());
-    GregorianCalendar g = new GregorianCalendar(500, 2, 30);
-    g.setTimeZone(TimeZone.getTimeZone("GMT"));
-    assertEquals(g, val.getObjectToFormat());
+    final LocalDate localDate = LocalDate.of(500, 3, 30);
+    assertEquals(localDate, val.getObjectToFormat());
 
   }
   /**
@@ -315,9 +297,9 @@ public class DateValueTest extends TestCase {
    * then in that case these 3 values should be replaced.
    */
   public void testHashCode() {
-    DateValue val1 = new DateValue(1900, 0, 1);
-    DateValue val2 = new DateValue(1800, 0, 20);
-    DateValue val3 = new DateValue(2019, 1,  10);
+    DateValue val1 = new DateValue(1900, 1, 1);
+    DateValue val2 = new DateValue(1800, 1, 20);
+    DateValue val3 = new DateValue(2019, 2,  10);
 
     assertFalse((val1.hashCode() == val2.hashCode())
         || (val1.hashCode() == val3.hashCode()));
@@ -327,8 +309,8 @@ public class DateValueTest extends TestCase {
   }
 
   public void testToQueryString() {
-    DateValue val1 = new DateValue(2007, 6, 20);
-    DateValue val2 = new DateValue(2010, 11, 11);
+    DateValue val1 = new DateValue(2007, 7, 20);
+    DateValue val2 = new DateValue(2010, 12, 11);
 
     assertEquals("DATE '2007-7-20'", val1.toQueryString());
     assertEquals("DATE '2010-12-11'", val2.toQueryString());

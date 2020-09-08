@@ -16,8 +16,6 @@ package com.google.visualization.datasource.base;
 
 import com.google.common.collect.Maps;
 
-import com.ibm.icu.util.ULocale;
-
 import java.util.Locale;
 import java.util.Map;
 
@@ -223,8 +221,7 @@ public enum MessagesEnum {
    *
    * @return A localized message given a reason type and locale.
    */
-  public String getMessageWithArgs(ULocale ulocale, String... args) {
-    Locale locale = ulocale != null ? ulocale.toLocale() : null;
+  public String getMessageWithArgs(Locale locale, String... args) {
     return LocaleUtil.getLocalizedMessageFromBundleWithArguments(
         "com.google.visualization.datasource.base.ErrorMessages", QUERY_ERROR_TO_MESSAGE.get(this),
         args, locale);
@@ -237,8 +234,7 @@ public enum MessagesEnum {
    *
    * @return A localized message given a reason type and locale.
    */
-  public String getMessage(ULocale ulocale) {
-    Locale locale = ulocale != null ? ulocale.toLocale() : null;
+  public String getMessage(final Locale locale) {
     return LocaleUtil.getLocalizedMessageFromBundle(
         "com.google.visualization.datasource.base.ErrorMessages", QUERY_ERROR_TO_MESSAGE.get(this), 
         locale);

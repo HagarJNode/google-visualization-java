@@ -19,9 +19,7 @@ import com.google.visualization.datasource.datatable.value.DateTimeValue;
 import com.google.visualization.datasource.datatable.value.Value;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -70,8 +68,7 @@ public class CurrentDateTime implements ScalarFunction {
    * @return A DateTime value with the current time.
    */
   public Value evaluate(List<Value> values) {
-    return new DateTimeValue(new GregorianCalendar(
-        TimeZone.getTimeZone("GMT")));
+    return new DateTimeValue(LocalDateTime.now());
   }
 
   /**

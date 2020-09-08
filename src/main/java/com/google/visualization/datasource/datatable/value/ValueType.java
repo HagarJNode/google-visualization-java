@@ -17,8 +17,9 @@ package com.google.visualization.datasource.datatable.value;
 import com.google.common.collect.Maps;
 import com.google.visualization.datasource.base.TypeMismatchException;
 
-import com.ibm.icu.util.GregorianCalendar;
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Map;
 
 /**
@@ -80,7 +81,7 @@ public enum ValueType {
   /**
    * Holds the mapping of type code to an instance of this class.
    */
-  private static Map<String, ValueType> typeCodeToValueType;
+  private static final Map<String, ValueType> typeCodeToValueType;
 
   /**
    * Creates a value of this ValueType. The value must be of an appropriate
@@ -102,19 +103,19 @@ public enum ValueType {
     if (value == null) {
       ret = Value.getNullValueFromValueType(this);
     } else if ((this == TEXT) &&
-               ((value instanceof String) || value == null)) {
+               (value instanceof String)) {
       ret = new TextValue((String) value);
     } else if ((this == NUMBER) && (value instanceof Number)) {
         ret = new NumberValue(((Number) value).doubleValue());
     } else if ((this == BOOLEAN) && (value instanceof Boolean)) {
-        ret = ((Boolean) value).booleanValue() ? BooleanValue.TRUE
+        ret = (Boolean) value ? BooleanValue.TRUE
                 : BooleanValue.FALSE;
-    } else if ((this == DATE) && (value instanceof GregorianCalendar)) {
-        ret = new DateValue((GregorianCalendar) value);
-    } else if ((this == DATETIME) && (value instanceof GregorianCalendar)) {
-        ret = new DateTimeValue((GregorianCalendar) value);
-    } else if ((this == TIMEOFDAY) && (value instanceof GregorianCalendar)) {
-        ret = new TimeOfDayValue((GregorianCalendar) value);
+    } else if ((this == DATE) && (value instanceof LocalDate)) {
+        ret = new DateValue((LocalDate) value);
+    } else if ((this == DATETIME) && (value instanceof LocalDateTime)) {
+        ret = new DateTimeValue((LocalDateTime) value);
+    } else if ((this == TIMEOFDAY) && (value instanceof LocalTime)) {
+        ret = new TimeOfDayValue((LocalTime) value);
     }
 
     // If none of the above hold, we have a type mismatch.

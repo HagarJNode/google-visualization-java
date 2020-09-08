@@ -21,10 +21,10 @@ import com.google.visualization.datasource.datatable.value.NumberValue;
 import com.google.visualization.datasource.datatable.value.Value;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
-import com.ibm.icu.util.GregorianCalendar;
-import com.ibm.icu.util.TimeZone;
-
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -81,27 +81,27 @@ public class ToDate implements ScalarFunction {
    * @return A date value with the appropriate date.
    */
   public Value evaluate(List<Value> values) {
-    Value value = values.get(0);
-    Date date;
-    GregorianCalendar gc = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+    final Value value = values.get(0);
 
     // If the given value is null, return a null date value.
     if (value.isNull()) {
       return DateValue.getNullValue();
     }
-    DateValue dateValue;
+    final DateValue dateValue;
     switch(value.getType()) {
       case DATE:
         dateValue = (DateValue) value;
         break;
       case DATETIME:
-        dateValue = new DateValue((GregorianCalendar)
-            (((DateTimeValue) value).getObjectToFormat()));
+        final LocalDateTime localDateTime = (((DateTimeValue) value)).getObjectToFormat();
+        dateValue = new DateValue(localDateTime.toLocalDate());
         break;
       case NUMBER:
-        date = new Date((long) ((NumberValue) value).getValue());
-        gc.setTime(date);
-        dateValue = new DateValue(gc);
+        dateValue = new DateValue(
+                Instant
+                        .ofEpochMilli((long) ((NumberValue) value).getValue())
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate());
         break;
       default:// Should never get here.
         throw new RuntimeException("Value type was not found: " + value.getType());

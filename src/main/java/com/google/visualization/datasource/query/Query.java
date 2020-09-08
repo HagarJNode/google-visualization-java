@@ -19,13 +19,12 @@ import com.google.common.collect.Sets;
 import com.google.visualization.datasource.base.InvalidQueryException;
 import com.google.visualization.datasource.base.MessagesEnum;
 
-import com.ibm.icu.util.ULocale;
-
 import org.apache.commons.lang.text.StrBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -69,7 +68,7 @@ public class Query {
    * @throws InvalidQueryException Thrown if a duplicate was found.
    */
   private static<T> void checkForDuplicates(List<T>
-      selectionColumns, String clauseName, ULocale userLocale) throws InvalidQueryException {
+      selectionColumns, String clauseName, Locale userLocale) throws InvalidQueryException {
     for (int i = 0; i < selectionColumns.size(); i++) {
       T col = selectionColumns.get(i);
       for (int j = i + 1; j < selectionColumns.size(); j++) {
@@ -160,7 +159,7 @@ public class Query {
   /**
    * The user locale, Used to create localized messages.
    */
-  private ULocale localeForUserMessages = null;
+  private Locale localeForUserMessages = null;
 
   /**
    * Constructs a new, empty, query.
@@ -569,10 +568,10 @@ public class Query {
   
   /**
    * Sets the user locale for creating localized messages.
-   * @param userLocale the user locale.
+   * @param localeForUserMessages the user locale.
    */
-  public void setLocaleForUserMessages(ULocale localeForUserMessges) {
-    this.localeForUserMessages = localeForUserMessges;
+  public void setLocaleForUserMessages(Locale localeForUserMessages) {
+    this.localeForUserMessages = localeForUserMessages;
   }
 
   /**

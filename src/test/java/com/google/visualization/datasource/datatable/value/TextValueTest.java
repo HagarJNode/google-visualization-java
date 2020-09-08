@@ -14,10 +14,10 @@
 
 package com.google.visualization.datasource.datatable.value;
 
-import com.ibm.icu.util.ULocale;
 import junit.framework.TestCase;
 
 import java.util.Comparator;
+import java.util.Locale;
 
 /**
  * Test for TextValue
@@ -131,9 +131,9 @@ public class TextValueTest extends TestCase {
   public void testLocalizedComparator() {
     // Test that strings are compared according to the given locale.
     Comparator<TextValue> rootComparator = TextValue.getTextLocalizedComparator(
-        ULocale.ROOT);
+        Locale.ROOT);
     Comparator<TextValue> frComparator = TextValue.getTextLocalizedComparator(
-        ULocale.FRENCH);
+        Locale.FRENCH);
     TextValue text1 = new TextValue("cot\u00E9");
     TextValue text2 = new TextValue("c\u00F4te");
     assertEquals(-1, rootComparator.compare(text1, text2));

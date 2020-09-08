@@ -27,8 +27,6 @@ import com.google.visualization.datasource.datatable.value.TextValue;
 import com.google.visualization.datasource.datatable.value.ValueType;
 import com.google.visualization.datasource.query.Query;
 
-import com.ibm.icu.util.ULocale;
-
 import junit.framework.TestCase;
 
 import static org.easymock.EasyMock.*;
@@ -75,7 +73,7 @@ public class DataSourceHelperTest extends TestCase {
 
     // Test select.
     DataTable result = DataSourceHelper.applyQuery(DataSourceHelper.parseQuery("select population"),
-        data, ULocale.US);
+        data, Locale.US);
     assertEquals(1, result.getNumberOfColumns());
     assertEquals(4, result.getNumberOfRows());
     assertEquals(new NumberValue(300), result.getRow(1).getCell(0).getValue());
@@ -84,7 +82,7 @@ public class DataSourceHelperTest extends TestCase {
 
     // Test where.
     result = DataSourceHelper.applyQuery(DataSourceHelper.parseQuery(
-        "select name,vegeterian where population > 100"), data, ULocale.US);
+        "select name,vegeterian where population > 100"), data, Locale.US);
     assertEquals(2, result.getNumberOfColumns());
     assertEquals(1, result.getNumberOfRows());
     assertEquals(new TextValue("Sloth"), result.getRow(0).getCell(0).getValue());
@@ -94,7 +92,7 @@ public class DataSourceHelperTest extends TestCase {
 
     // Test group by.
     result = DataSourceHelper.applyQuery(DataSourceHelper.parseQuery(
-        "select vegeterian,sum(population) group by vegeterian"), data, ULocale.US);
+        "select vegeterian,sum(population) group by vegeterian"), data, Locale.US);
     assertEquals(2, result.getNumberOfColumns());
     assertEquals(2, result.getNumberOfRows());
     assertEquals(BooleanValue.FALSE, result.getRow(0).getCell(0).getValue());
@@ -104,7 +102,7 @@ public class DataSourceHelperTest extends TestCase {
 
     // Test pivot.
     result = DataSourceHelper.applyQuery(DataSourceHelper.parseQuery(
-        "select sum(population) pivot vegeterian"), data, ULocale.US);
+        "select sum(population) pivot vegeterian"), data, Locale.US);
     assertEquals(2, result.getNumberOfColumns());
     assertEquals(1, result.getNumberOfRows());
     assertEquals("false", result.getColumnDescription(0).getLabel());
@@ -114,7 +112,7 @@ public class DataSourceHelperTest extends TestCase {
 
     // Test order by.
     result = DataSourceHelper.applyQuery(DataSourceHelper.parseQuery(
-        "select name order by population"), data, ULocale.US);
+        "select name order by population"), data, Locale.US);
     assertEquals(1, result.getNumberOfColumns());
     assertEquals(4, result.getNumberOfRows());
     assertEquals(new TextValue("Leopard"), result.getRow(0).getCell(0).getValue());
@@ -126,7 +124,7 @@ public class DataSourceHelperTest extends TestCase {
 
     // Test limit and offset.
     result = DataSourceHelper.applyQuery(DataSourceHelper.parseQuery("limit 1 offset 1"), data,
-        ULocale.US);
+        Locale.US);
     assertEquals(4, result.getNumberOfColumns());
     assertEquals(1, result.getNumberOfRows());
     assertEquals(new TextValue("Sloth"), result.getRow(0).getCell(0).getValue());
@@ -136,7 +134,7 @@ public class DataSourceHelperTest extends TestCase {
     // Test label and format.
     result = DataSourceHelper.applyQuery(DataSourceHelper.parseQuery(
         "label population 'Population size (thousands)' format population \"'$'#'k'\""), data,
-        ULocale.US);
+        Locale.US);
     assertEquals(4, result.getNumberOfColumns());
     assertEquals(4, result.getNumberOfRows(), 4);
     assertEquals("Population size (thousands)",
@@ -155,7 +153,7 @@ public class DataSourceHelperTest extends TestCase {
     // Test that validation against the table description can fail.
     Query q = DataSourceHelper.parseQuery("select avg(name) group by link");
     try {
-      DataSourceHelper.applyQuery(q, data, ULocale.US);
+      DataSourceHelper.applyQuery(q, data, Locale.US);
       fail();
     } catch (InvalidQueryException e) {
       // Do nothing.
@@ -182,7 +180,7 @@ public class DataSourceHelperTest extends TestCase {
     DataSourceRequest dataSourceRequest = new DataSourceRequest(
         new Query(),
         new DataSourceParameters(null),
-        ULocale.UK);
+        Locale.UK);
     assertEquals(
         "{\"version\":\"0.6\",\"status\":\"ok\",\"sig\":\"1548939605\","
         + "\"table\":{\"cols\":[{\"id\":\"col1\",\"label\":\"column1\","
@@ -196,7 +194,7 @@ public class DataSourceHelperTest extends TestCase {
     dataSourceRequest = new DataSourceRequest(
         new Query(),
         new DataSourceParameters("reqId:666"),
-        ULocale.UK);
+        Locale.UK);
     assertEquals(
         "{\"version\":\"0.6\",\"reqId\":\"666\",\"status\":\"ok\",\"sig\":\"1548939605\","
         + "\"table\":{\"cols\":[{\"id\":\"col1\",\"label\":\"column1\","
@@ -210,7 +208,7 @@ public class DataSourceHelperTest extends TestCase {
     dataSourceRequest = new DataSourceRequest(
         new Query(),
         new DataSourceParameters("out:json"),
-        ULocale.UK);
+        Locale.UK);
     assertEquals(
         "{\"version\":\"0.6\",\"status\":\"ok\",\"sig\":\"1548939605\","
         + "\"table\":{\"cols\":[{\"id\":\"col1\",\"label\":\"column1\","
@@ -224,7 +222,7 @@ public class DataSourceHelperTest extends TestCase {
     dataSourceRequest = new DataSourceRequest(
         new Query(),
         new DataSourceParameters("out:jsonp"),
-        ULocale.UK);
+        Locale.UK);
     assertEquals(
         "// Data table response\ngoogle.visualization.Query.setResponse("
         + "{\"version\":\"0.6\",\"status\":\"ok\",\"sig\":\"1548939605\","
@@ -239,7 +237,7 @@ public class DataSourceHelperTest extends TestCase {
     dataSourceRequest = new DataSourceRequest(
         new Query(),
         new DataSourceParameters("out:tsv-excel"),
-        ULocale.UK);
+        Locale.UK);
     assertEquals(
         "\"column1\"\t\"column2\"\t\"column3\"\n7\tfalse\t\"Why?\"\n",
         DataSourceHelper.generateResponse(dataTable, dataSourceRequest));
@@ -248,7 +246,7 @@ public class DataSourceHelperTest extends TestCase {
     dataSourceRequest = new DataSourceRequest(
         new Query(),
         new DataSourceParameters("out:csv;reqId:7"),
-        ULocale.UK);
+        Locale.UK);
     assertEquals(
         "\"column1\",\"column2\",\"column3\"\n7,false,\"Why?\"\n",
         DataSourceHelper.generateResponse(dataTable, dataSourceRequest));
@@ -262,8 +260,8 @@ public class DataSourceHelperTest extends TestCase {
     expect(req.getLocale()).andReturn(Locale.CANADA_FRENCH);
     replay(req);
 
-    assertEquals(Locale.FRENCH, DataSourceHelper.getLocaleFromRequest(req).toLocale());
-    assertEquals(ULocale.CANADA_FRENCH, DataSourceHelper.getLocaleFromRequest(req));
+    assertEquals(Locale.FRENCH, DataSourceHelper.getLocaleFromRequest(req));
+    assertEquals(Locale.CANADA_FRENCH, DataSourceHelper.getLocaleFromRequest(req));
 
     verify(req);
   }
