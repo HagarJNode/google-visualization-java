@@ -48,8 +48,8 @@ import com.google.visualization.datasource.query.QuerySort;
 import com.google.visualization.datasource.query.SimpleColumn;
 import com.google.visualization.datasource.query.SortOrder;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.text.StrBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.StrBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

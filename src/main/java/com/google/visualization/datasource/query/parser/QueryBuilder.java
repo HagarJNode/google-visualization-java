@@ -18,7 +18,7 @@ import com.google.visualization.datasource.base.InvalidQueryException;
 import com.google.visualization.datasource.base.MessagesEnum;
 import com.google.visualization.datasource.query.Query;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

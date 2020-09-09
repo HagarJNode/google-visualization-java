@@ -23,7 +23,7 @@ import com.google.visualization.datasource.datatable.value.Value;
 import com.google.visualization.datasource.datatable.value.ValueType;
 import com.google.visualization.datasource.query.scalarfunction.ScalarFunction;
 
-import org.apache.commons.lang.text.StrBuilder;
+import org.apache.commons.lang3.text.StrBuilder;
 
 import java.util.List;
 

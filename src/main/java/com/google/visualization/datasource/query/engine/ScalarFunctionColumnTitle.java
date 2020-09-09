@@ -22,7 +22,7 @@ import com.google.visualization.datasource.query.AbstractColumn;
 import com.google.visualization.datasource.query.AggregationColumn;
 import com.google.visualization.datasource.query.ScalarFunctionColumn;
 
-import org.apache.commons.lang.text.StrBuilder;
+import org.apache.commons.lang3.text.StrBuilder;
 
 import java.util.List;
 

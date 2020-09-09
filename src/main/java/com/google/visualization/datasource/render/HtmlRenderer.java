@@ -26,7 +26,7 @@ import com.google.visualization.datasource.datatable.ValueFormatter;
 import com.google.visualization.datasource.datatable.value.BooleanValue;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;

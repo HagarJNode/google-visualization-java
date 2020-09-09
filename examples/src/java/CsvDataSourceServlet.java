@@ -22,7 +22,7 @@ import com.google.visualization.datasource.util.CsvDataSourceHelper;
 
 import com.ibm.icu.util.ULocale;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

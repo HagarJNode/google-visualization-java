@@ -21,7 +21,7 @@ import com.google.visualization.datasource.datatable.value.ValueType;
 import com.google.visualization.datasource.query.AggregationColumn;
 import com.google.visualization.datasource.query.AggregationType;
 
-import org.apache.commons.lang.text.StrBuilder;
+import org.apache.commons.lang3.text.StrBuilder;
 
 import java.util.List;
 

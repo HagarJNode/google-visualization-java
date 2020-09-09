@@ -19,41 +19,13 @@ import com.google.visualization.datasource.base.DataSourceException;
 import com.google.visualization.datasource.base.InvalidQueryException;
 import com.google.visualization.datasource.datatable.ColumnDescription;
 import com.google.visualization.datasource.datatable.DataTable;
-import com.google.visualization.datasource.datatable.value.BooleanValue;
-import com.google.visualization.datasource.datatable.value.DateTimeValue;
-import com.google.visualization.datasource.datatable.value.DateValue;
-import com.google.visualization.datasource.datatable.value.NumberValue;
-import com.google.visualization.datasource.datatable.value.TextValue;
-import com.google.visualization.datasource.datatable.value.TimeOfDayValue;
-import com.google.visualization.datasource.datatable.value.ValueType;
-import com.google.visualization.datasource.query.AggregationColumn;
-import com.google.visualization.datasource.query.AggregationType;
-import com.google.visualization.datasource.query.ColumnColumnFilter;
-import com.google.visualization.datasource.query.ColumnIsNullFilter;
-import com.google.visualization.datasource.query.ColumnValueFilter;
-import com.google.visualization.datasource.query.ComparisonFilter;
-import com.google.visualization.datasource.query.CompoundFilter;
-import com.google.visualization.datasource.query.NegationFilter;
-import com.google.visualization.datasource.query.Query;
-import com.google.visualization.datasource.query.QueryFilter;
-import com.google.visualization.datasource.query.QueryGroup;
-import com.google.visualization.datasource.query.QuerySelection;
-import com.google.visualization.datasource.query.QuerySort;
-import com.google.visualization.datasource.query.SimpleColumn;
-import com.google.visualization.datasource.query.SortOrder;
-
+import com.google.visualization.datasource.datatable.value.*;
+import com.google.visualization.datasource.query.*;
 import junit.framework.TestCase;
+import org.apache.commons.lang3.text.StrBuilder;
 
-import org.apache.commons.lang.text.StrBuilder;
-
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.sql.*;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 /**

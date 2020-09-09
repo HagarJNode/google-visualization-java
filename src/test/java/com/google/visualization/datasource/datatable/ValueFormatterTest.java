@@ -15,19 +15,9 @@
 package com.google.visualization.datasource.datatable;
 
 import com.google.visualization.datasource.base.LocaleUtil;
-import com.google.visualization.datasource.datatable.value.BooleanValue;
-import com.google.visualization.datasource.datatable.value.DateTimeValue;
-import com.google.visualization.datasource.datatable.value.DateValue;
-import com.google.visualization.datasource.datatable.value.NumberValue;
-import com.google.visualization.datasource.datatable.value.TextValue;
-import com.google.visualization.datasource.datatable.value.TimeOfDayValue;
-import com.google.visualization.datasource.datatable.value.ValueType;
-
+import com.google.visualization.datasource.datatable.value.*;
 import junit.framework.TestCase;
-
-import org.apache.commons.lang.StringUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -266,21 +256,21 @@ public class ValueFormatterTest extends TestCase {
   // Some locales use localized digits and so even a simple pattern will be formatted
   // differently than in English.
   // The following is a simple example for Hindi.
-  @Ignore("There is a problem with special encoding https://stackoverflow.com/questions/39365072/date-conversion-to-a-different-locale")
+//  @Ignore("There is a problem with special encoding https://stackoverflow.com/questions/39365072/date-conversion-to-a-different-locale")
   public void hindiLocale() throws ParseException
   {
-    final Locale locale = new Locale("hi", "IN");
+    final Locale locale = new Locale.Builder().setLanguageTag("hi-IN-u-nu-deva").build();
     NumberFormat format = NumberFormat.getInstance(locale);
 
     Number parse = format.parse("१");
 
     System.out.println(parse);
 
-    final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(locale);
+    final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(locale);
     System.out.println("dateTimeFormatter: " + dateTimeFormatter.format(LocalDate.now()));
 
     ValueFormatter dateFormatter = ValueFormatter.createFromPattern(
-        ValueType.DATE, "MM | dd | yyyy", new Locale("hin","IND"));
+        ValueType.DATE, "MM | dd | yyyy", locale);
     DateValue dateValue = new DateValue(2009, 2, 2);
     String dateString =
         "\u0966\u0968\u0020\u007c\u0020\u0966\u0968\u0020\u007c\u0020\u0968\u0966\u0966\u096f";

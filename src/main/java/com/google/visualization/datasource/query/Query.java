@@ -19,7 +19,7 @@ import com.google.common.collect.Sets;
 import com.google.visualization.datasource.base.InvalidQueryException;
 import com.google.visualization.datasource.base.MessagesEnum;
 
-import org.apache.commons.lang.text.StrBuilder;
+import org.apache.commons.lang3.text.StrBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

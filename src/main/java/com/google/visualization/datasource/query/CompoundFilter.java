@@ -20,7 +20,7 @@ import com.google.common.collect.Sets;
 import com.google.visualization.datasource.datatable.DataTable;
 import com.google.visualization.datasource.datatable.TableRow;
 
-import org.apache.commons.lang.text.StrBuilder;
+import org.apache.commons.lang3.text.StrBuilder;
 
 import java.util.List;
 import java.util.Set;

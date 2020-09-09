@@ -15,7 +15,7 @@
 package com.google.visualization.datasource.render;
 
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * A utility to escape strings.
@@ -151,7 +151,7 @@ public class EscapeUtil {
    * @return The escaped string.
    */
   public static String htmlEscape(String str) {
-    return StringEscapeUtils.escapeHtml(str);
+    return StringEscapeUtils.escapeHtml4(str);
   }
 
 }

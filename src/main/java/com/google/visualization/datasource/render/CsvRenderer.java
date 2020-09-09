@@ -22,7 +22,7 @@ import com.google.visualization.datasource.datatable.TableRow;
 import com.google.visualization.datasource.datatable.ValueFormatter;
 import com.google.visualization.datasource.datatable.value.ValueType;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Locale;

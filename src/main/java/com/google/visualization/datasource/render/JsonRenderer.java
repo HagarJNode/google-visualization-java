@@ -21,8 +21,8 @@ import com.google.visualization.datasource.datatable.DataTable;
 import com.google.visualization.datasource.datatable.TableCell;
 import com.google.visualization.datasource.datatable.TableRow;
 import com.google.visualization.datasource.datatable.value.*;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.text.StrBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.StrBuilder;
 
 import java.util.List;
 import java.util.Map;

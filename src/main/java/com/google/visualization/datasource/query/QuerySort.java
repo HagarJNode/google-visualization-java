@@ -17,7 +17,7 @@ package com.google.visualization.datasource.query;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import org.apache.commons.lang.text.StrBuilder;
+import org.apache.commons.lang3.text.StrBuilder;
 
 import java.util.List;
 
