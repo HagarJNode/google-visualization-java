@@ -149,7 +149,7 @@ public class DateValueTest extends TestCase {
 
     // Verify values - default milliseconds.
     assertEquals(2006, value.getYear());
-    assertEquals(1, value.getMonth());
+    assertEquals(0, value.getMonth());
     assertEquals(3, value.getDayOfMonth());
   }
 
@@ -176,7 +176,7 @@ public class DateValueTest extends TestCase {
 
   public void testGetMonth() {
     // Note that the month is August and not July in this case.
-    DateValue value = new DateValue(2020, 7, 11);
+    DateValue value = new DateValue(2020, 8, 11);
     assertTrue(value.getMonth() == 7);
   }
 

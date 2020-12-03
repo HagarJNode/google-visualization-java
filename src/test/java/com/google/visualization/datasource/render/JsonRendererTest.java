@@ -143,19 +143,19 @@ public class JsonRendererTest extends TestCase {
     TableCell textCell = new TableCell("aba");
 
 
-    assertEquals("{\"v\":new Date(2009,1,12)}",
+    assertEquals("{\"v\":new Date(2009,0,12)}",
         JsonRenderer.appendCellJson(dateCell, new StringBuilder(),
             true, false, true, false).toString());
-    assertEquals("{\"v\":\"Date(2009,1,12)\"}",
+    assertEquals("{\"v\":\"Date(2009,0,12)\"}",
         JsonRenderer.appendCellJson(dateCell, new StringBuilder(),
             true, false, false, false).toString());
     assertEquals("{\"v\":[12,13,14,15]}",
         JsonRenderer.appendCellJson(timeofdayCell, new StringBuilder(),
             true, false, true, false).toString());
-    assertEquals("{\"v\":new Date(2009,1,12,12,13,14)}", //no milliseconds passed
+    assertEquals("{\"v\":new Date(2009,0,12,12,13,14)}", //no milliseconds passed
         JsonRenderer.appendCellJson(datetimeCell, new StringBuilder(),
             true, false, true, false).toString());
-    assertEquals("{\"v\":\"Date(2009,1,12,12,13,14)\"}", //no milliseconds passed
+    assertEquals("{\"v\":\"Date(2009,0,12,12,13,14)\"}", //no milliseconds passed
         JsonRenderer.appendCellJson(datetimeCell, new StringBuilder(),
             true, false, false, false).toString());
     assertEquals("{\"v\":true}",
@@ -174,10 +174,10 @@ public class JsonRendererTest extends TestCase {
             false, false, true, false).toString());
 
 
-   dateCell = new TableCell(new DateValue(2009, 1, 12), "2009-2-12");
+   dateCell = new TableCell(new DateValue(2009, 2, 12), "2009-1-12");
 
     // With formatting
-    assertEquals("{\"v\":new Date(2009,1,12),\"f\":\"2009-2-12\"}",
+    assertEquals("{\"v\":new Date(2009,1,12),\"f\":\"2009-1-12\"}",
         JsonRenderer.appendCellJson(dateCell, new StringBuilder(),
             true, false, true, false).toString());
 
@@ -336,7 +336,7 @@ public class JsonRendererTest extends TestCase {
 
     row = new TableRow();
     row.addCell(new TableCell(new DateValue(2011, 1, 3), "1/3/2011"));
-    row.addCell(new TableCell(new DateTimeValue(2011, 1, 3, 3, 15, 0, 0), "1/1/2011 03:15:00"));
+    row.addCell(new TableCell(new DateTimeValue(2011, 1, 3, 3, 15, 0, 0), "1/3/2011 03:15:00"));
     row.addCell(new TableCell(333));
     rows.add(row);
 
@@ -351,15 +351,15 @@ public class JsonRendererTest extends TestCase {
         "{\"cols\":[{\"id\":\"DateA\",\"label\":\"col0\",\"type\":\"date\",\"pattern\":\"\"},"
             + "{\"id\":\"DateTimeA\",\"label\":\"col1\",\"type\":\"datetime\",\"pattern\":\"\"},"
             + "{\"id\":\"ValueA\",\"label\":\"col2\",\"type\":\"number\",\"pattern\":\"\"}],"
-            + "\"rows\":[{\"c\":[{\"v\":new Date(2011,1,1),\"f\":\"1/1/2011\"},"
-            + "{\"v\":new Date(2011,1,1,0,0,0),\"f\":\"1/1/2011 00:00:00\"},"
+            + "\"rows\":[{\"c\":[{\"v\":new Date(2011,0,1),\"f\":\"1/1/2011\"},"
+            + "{\"v\":new Date(2011,0,1,0,0,0),\"f\":\"1/1/2011 00:00:00\"},"
             + "{\"v\":222.0,\"f\":\"222\"}]},"
-            + "{\"c\":[{\"v\":new Date(2011,1,2),\"f\":\"1/2/2011\"},"
-            + "{\"v\":new Date(2011,1,2,3,15,0)},{\"v\":null}]},"
-            + "{\"c\":[{\"v\":new Date(2011,1,3),\"f\":\"1/3/2011\"},"
-            + "{\"v\":new Date(2011,1,3,3,15,0),\"f\":\"1/1/2011 03:15:00\"},{\"v\":333.0}]},"
-            + "{\"c\":[{\"v\":new Date(2011,1,4)},"
-            + "{\"v\":new Date(2011,1,4,0,0,0)},{\"v\":222.0}]}]}",
+            + "{\"c\":[{\"v\":new Date(2011,0,2),\"f\":\"1/2/2011\"},"
+            + "{\"v\":new Date(2011,0,2,3,15,0)},{\"v\":null}]},"
+            + "{\"c\":[{\"v\":new Date(2011,0,3),\"f\":\"1/3/2011\"},"
+            + "{\"v\":new Date(2011,0,3,3,15,0),\"f\":\"1/3/2011 03:15:00\"},{\"v\":333.0}]},"
+            + "{\"c\":[{\"v\":new Date(2011,0,4)},"
+            + "{\"v\":new Date(2011,0,4,0,0,0)},{\"v\":222.0}]}]}",
         JsonRenderer.renderDataTable(testData,
             true, true, true /* renderDateConstructor */).toString());
     
@@ -367,15 +367,15 @@ public class JsonRendererTest extends TestCase {
         "{\"cols\":[{\"id\":\"DateA\",\"label\":\"col0\",\"type\":\"date\",\"pattern\":\"\"},"
             + "{\"id\":\"DateTimeA\",\"label\":\"col1\",\"type\":\"datetime\",\"pattern\":\"\"},"
             + "{\"id\":\"ValueA\",\"label\":\"col2\",\"type\":\"number\",\"pattern\":\"\"}],"
-            + "\"rows\":[{\"c\":[{\"v\":\"Date(2011,1,1)\",\"f\":\"1/1/2011\"},"
-            + "{\"v\":\"Date(2011,1,1,0,0,0)\",\"f\":\"1/1/2011 00:00:00\"},"
+            + "\"rows\":[{\"c\":[{\"v\":\"Date(2011,0,1)\",\"f\":\"1/1/2011\"},"
+            + "{\"v\":\"Date(2011,0,1,0,0,0)\",\"f\":\"1/1/2011 00:00:00\"},"
             + "{\"v\":222.0,\"f\":\"222\"}]},"
-            + "{\"c\":[{\"v\":\"Date(2011,1,2)\",\"f\":\"1/2/2011\"},"
-            + "{\"v\":\"Date(2011,1,2,3,15,0)\"},{\"v\":null}]},"
-            + "{\"c\":[{\"v\":\"Date(2011,1,3)\",\"f\":\"1/3/2011\"},"
-            + "{\"v\":\"Date(2011,1,3,3,15,0)\",\"f\":\"1/1/2011 03:15:00\"},{\"v\":333.0}]},"
-            + "{\"c\":[{\"v\":\"Date(2011,1,4)\"},"
-            + "{\"v\":\"Date(2011,1,4,0,0,0)\"},{\"v\":222.0}]}]}",
+            + "{\"c\":[{\"v\":\"Date(2011,0,2)\",\"f\":\"1/2/2011\"},"
+            + "{\"v\":\"Date(2011,0,2,3,15,0)\"},{\"v\":null}]},"
+            + "{\"c\":[{\"v\":\"Date(2011,0,3)\",\"f\":\"1/3/2011\"},"
+            + "{\"v\":\"Date(2011,0,3,3,15,0)\",\"f\":\"1/3/2011 03:15:00\"},{\"v\":333.0}]},"
+            + "{\"c\":[{\"v\":\"Date(2011,0,4)\"},"
+            + "{\"v\":\"Date(2011,0,4,0,0,0)\"},{\"v\":222.0}]}]}",
         JsonRenderer.renderDataTable(testData, true, true, false).toString());
   }
 

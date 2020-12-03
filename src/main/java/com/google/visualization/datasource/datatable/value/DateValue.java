@@ -49,7 +49,7 @@ public class DateValue extends Value {
   private int year;
 
   /**
-   * Underlying value: month. Note we use the java convention for months, this is:
+   * Underlying value: month. Note we use the javascript convention for months, this is:
    * January = 0, February = 1, ..., December = 11.
    */
   private int month;
@@ -102,7 +102,7 @@ public class DateValue extends Value {
     }
     // Assign internal variables.
     this.year = year;
-    this.month = month;
+    this.month = month - 1;
     this.dayOfMonth = dayOfMonth;
   }
 
@@ -122,7 +122,7 @@ public class DateValue extends Value {
   public DateValue(final LocalDate localDate) {
 
     this.year = localDate.getYear();
-    this.month = localDate.getMonthValue();
+    this.month = localDate.getMonthValue() - 1;
     this.dayOfMonth = localDate.getDayOfMonth();
   }
 
@@ -141,7 +141,7 @@ public class DateValue extends Value {
     if (this == NULL_VALUE) {
       return "null";
     }
-    return String.format("%1$d-%2$02d-%3$02d", year, month, dayOfMonth);
+    return String.format("%1$d-%2$02d-%3$02d", year, month + 1, dayOfMonth);
 
   }
 
@@ -216,7 +216,7 @@ public class DateValue extends Value {
       return null;
     }
 
-    return LocalDate.of(year, month, dayOfMonth);
+    return LocalDate.of(year, month + 1, dayOfMonth);
   }
 
   /**
@@ -266,6 +266,6 @@ public class DateValue extends Value {
    */
   @Override
   protected String innerToQueryString() {
-    return "DATE '" + year + "-" + (month) + "-" + dayOfMonth + "'";
+    return "DATE '" + year + "-" + (month + 1) + "-" + dayOfMonth + "'";
   }
 }

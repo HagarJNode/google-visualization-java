@@ -158,14 +158,14 @@ public class TimeComponentExtractorTest extends TestCase {
     List<Value> dateValues =
         Lists.newArrayList((Value) new DateValue(2008, 7, 13));
     assertEquals(new NumberValue(2008), year.evaluate(dateValues));
-    assertEquals(new NumberValue(7), month.evaluate(dateValues));
+    assertEquals(new NumberValue(6), month.evaluate(dateValues));
     assertEquals(new NumberValue(13), day.evaluate(dateValues));
 
     List<Value> dateTimeValues =
         Lists.newArrayList((Value) new DateTimeValue(
             2001, 2, 3, 9, 12, 22, 333));
     assertEquals(new NumberValue(2001), year.evaluate(dateTimeValues));
-    assertEquals(new NumberValue(2), month.evaluate(dateTimeValues));
+    assertEquals(new NumberValue(1), month.evaluate(dateTimeValues));
     assertEquals(new NumberValue(3), day.evaluate(dateTimeValues));
     assertEquals(new NumberValue(9), hour.evaluate(dateTimeValues));
     assertEquals(new NumberValue(12), minute.evaluate(dateTimeValues));
@@ -223,7 +223,7 @@ public class TimeComponentExtractorTest extends TestCase {
             2001, 8, 3, 9, 12, 22, 333));
 
     assertEquals(new NumberValue(1), quarter.evaluate(dateTimeValues1));
-    assertEquals(new NumberValue(2), quarter.evaluate(dateTimeValues2));
+    assertEquals(new NumberValue(1), quarter.evaluate(dateTimeValues2));
     assertEquals(new NumberValue(3), quarter.evaluate(dateTimeValues3));
     assertEquals(new NumberValue(4), quarter.evaluate(dateTimeValues4));
     assertEquals(new NumberValue(3), quarter.evaluate(dateTimeValues5));

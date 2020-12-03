@@ -93,7 +93,7 @@ public class DateTimeValue extends Value {
     // A RunTimeException is thrown here since it is very unusual for structured
     // data to be incorrect.
     if ((getYear() != year)
-        || (getMonth() != month)
+        || (getMonth() != month - 1)
         || (getDayOfMonth() != dayOfMonth)
         || (getHourOfDay() != hours)
         || (getMinute() != minutes)
@@ -138,7 +138,7 @@ public class DateTimeValue extends Value {
    * @return The month.
    */
   public int getMonth() {
-    return localDateTime.getMonthValue();
+    return localDateTime.getMonthValue() - 1;
   }
 
   /**
@@ -203,7 +203,7 @@ public class DateTimeValue extends Value {
       return "null";
     }
    String result = String.format("%1$d-%2$02d-%3$02d %4$02d:%5$02d:%6$02d",
-       getYear(), getMonth(), getDayOfMonth(), getHourOfDay(), getMinute(),
+       getYear(), getMonth() + 1, getDayOfMonth(), getHourOfDay(), getMinute(),
        getSecond());
     if (getMillisecond() > 0) {
       result += "." + String.format("%1$03d", getMillisecond());
@@ -289,7 +289,7 @@ public class DateTimeValue extends Value {
    */
   @Override
   protected String innerToQueryString() {
-    String s = "DATETIME '" + getYear() + "-" + getMonth() + "-"
+    String s = "DATETIME '" + getYear() + "-" + (getMonth() + 1) + "-"
         + getDayOfMonth() + " " + getHourOfDay() + ":" + getMinute() + ":"
         + getSecond();
     int milli = getMillisecond();
